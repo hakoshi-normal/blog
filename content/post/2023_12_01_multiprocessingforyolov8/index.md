@@ -58,6 +58,7 @@ base64→内部UDPが一瞬頭を過るが無視して
 
 ドキュメントによると，python標準モジュールmultiprocessingにはメモリ共有やプロキシ経由でのオブジェクト操作をサポートする機能が幾つかあるんだとか．
 Value, Array, Queue, Pipe, RawArray, Manager, shared_memory......
+
 多い．更にここ4,5年のPythonアップデートでmultiprocessingの仕様が大幅に変わっており，どれを使えばいいのか分かりづらい．
 
 試行錯誤の後，名前で共有メモリ領域を指定するshared_memoryを利用することに．
@@ -105,7 +106,7 @@ password = "*"
 mode = 1
 
 # 推論プロセス数指定
-N = 3*len(info_list)
+N = 3
 
 def rec_cam(cam_id, username, ipaddress, pre_flags, stop_flag, frame_info):
     url = f"rtsp://{username}:{password}@{ipaddress}:554/stream{mode}"
@@ -117,7 +118,7 @@ def rec_cam(cam_id, username, ipaddress, pre_flags, stop_flag, frame_info):
         frame = frame.to_ndarray(format='bgr24')
 
         # 共有メモリにフレームを書き込み
-        idx = (cam_id)*(N//len(info_list))+counter%(N//len(info_list))
+        idx = (cam_id)*N+counter%N
         mem_name = f'shared{idx+1:02}'
         shm = shared_memory.SharedMemory(name=mem_name)
         frame_sh = np.ndarray(shape=frame_info["shape"], dtype=frame_info["dtype"], buffer=shm.buf)
@@ -210,7 +211,7 @@ if __name__ == '__main__':
     pre_processes = []
     pre_flags = []
     mem_names = []
-    for i in range(N):
+    for i in range(N*len(info_list)):
         pre_flag = Event()
         pre_flags.append(pre_flag)
         mem_name = f'shared{i+1:02}'
@@ -219,14 +220,11 @@ if __name__ == '__main__':
         shm = shared_memory.SharedMemory(create=True, size=frame_info["nbytes"], name = mem_name)
         mem_space.append(shm)
         # frame_sh = np.ndarray(shape=frame_shape, dtype=frame_dtype, buffer=shm.buf)
-        username = info_list[i//(N//len(info_list))][0]
-        pre_fin_flag = pre_fin_flags[i//(N//len(info_list))]
+        username = info_list[i//N][0]
+        pre_fin_flag = pre_fin_flags[i//N]
         p = Process(target=predict_frame, args=(pre_flag, pre_fin_flag, mem_name, stop_flag, username, frame_info))
         pre_processes.append(p)
         p.start()
-        print("loading model...",f'{i+1}/{N}')
-        # time.sleep(3)
-
 
     # 撮影プロセス群（カメラ台数）
     rec_processes = []
