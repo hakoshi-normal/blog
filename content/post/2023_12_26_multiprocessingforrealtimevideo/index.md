@@ -34,8 +34,8 @@ toc: true
 cam_N = 4 # カメラ台数
 proccess_N = 3 # カメラ1台あたりのプロセス数
 frame_info = {"nbytes" : frame.nbytes,
-                            "shape" : frame.shape,
-                            "dtype" : frame.dtype}
+                "shape" : frame.shape,
+                "dtype" : frame.dtype}
 ```
 フレームのサイズや型はメモリ確保，呼び出し時に必要になります．
 
