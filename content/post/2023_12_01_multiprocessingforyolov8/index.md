@@ -9,11 +9,11 @@ toc: true
 ## 実装過程あれこれ１
 
 これまでの作業でmultiprocessingモジュールを利用しプレーヤーの手牌を写す4台の
-<a href="https://www.tp-link.com/jp/smart-home/tapo/tapo-c200/" target="_blank">Tapo C200</a>
+<a href="https://www.tp-link.com/jp/smart-home/tapo/tapo-c200/" target="_blank" rel="noopener noreferrer">Tapo C200</a>
 からフレームを受信することができるようになりました．
 <br>
 早速各カメラに割り当てたプロセス毎に適当に学習させておいた
-<a href="https://docs.ultralytics.com/ja/" target="_blank">YOLOv8</a>
+<a href="https://docs.ultralytics.com/ja/" target="_blank" rel="noopener noreferrer">YOLOv8</a>
 による牌推論を実行し，結果を描画してみました．わくわく！
 
 はい，映像出力が不穏な感じに．
