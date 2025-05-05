@@ -1,4 +1,5 @@
-baseURL: https://hakoshi-normal.github.io/
+baseURL: https://hakoshi-normal.github.io/blog/
+publishDir: docs
 languageCode: ja-jp
 title: 箱四のブログ
 theme: ["PaperMod"]
