@@ -1,0 +1,4 @@
+baseURL: https://hakoshi-normal.github.io/
+languageCode: ja-jp
+title: 箱四のブログ
+theme: ["PaperMod"]
