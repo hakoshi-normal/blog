@@ -3,3 +3,7 @@ publishDir: docs
 languageCode: ja-jp
 title: 箱四のブログ
 theme: ["PaperMod"]
+
+caches:
+  images:
+    dir: :cacheDir/images
