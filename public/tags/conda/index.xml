@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Conda on 箱四のブログ</title>
+    <link>http://localhost:1313/blog/tags/conda/</link>
+    <description>Recent content in Conda on 箱四のブログ</description>
+    <generator>Hugo -- 0.147.1</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/conda/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【入門】Python仮想環境</title>
+      <link>http://localhost:1313/blog/posts/20250506_condavenv/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20250506_condavenv/</guid>
+      <description>&lt;h2 id=&#34;ライブラリとは&#34;&gt;ライブラリとは？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;ライブラリ&lt;/strong&gt;とは，再利用可能なソフトウェア部品のことで，特定の機能をまとめたコードの再集合のことを指します．簡単に言えば，他の人が作ってくれた機能を自身のプログラムで使える便利なコード集のことです．
+Pythonには&lt;strong&gt;標準ライブラリ&lt;/strong&gt;と&lt;strong&gt;外部ライブラリ&lt;/strong&gt;の2種類があります．&lt;/p&gt;
+&lt;h3 id=&#34;標準ライブラリ&#34;&gt;標準ライブラリ&lt;/h3&gt;
+&lt;p&gt;標準ライブラリはPythonをインストールしたときに標準的に入っているライブラリのことです．通常のプログラム作成時に頻繁に必要となる機能をまとめたものが多くあります．例えば，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;乱数を作成する random&lt;/li&gt;
+&lt;li&gt;時刻を取得できる datetime, time&lt;/li&gt;
+&lt;li&gt;ファイルシステムへのアクセスを実現する os, shutil&lt;/li&gt;
+&lt;li&gt;基礎的な数学関数 math&lt;/li&gt;
+&lt;li&gt;HTMLサポート html&lt;/li&gt;
+&lt;li&gt;URLを使ってインターネットにアクセスできる urllib&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;スマートフォンで言うところのカメラ，アルバム，時計などのデフォルトアプリみたいなものです．これらはPythonが動く環境であれば勝手に入っているため，&lt;code&gt;import ライブラリ名&lt;/code&gt;と記述すればすぐに利用することができます．助かる！！&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# サイコロの出目を出力&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; random
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dice_roll &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;サイコロの出目:&amp;#34;&lt;/span&gt;, dice_roll)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;外部ライブラリ&#34;&gt;外部ライブラリ&lt;/h3&gt;
+&lt;p&gt;外部ライブラリはPythonにはもともと組み込まれておらず，自身で導入するタイプのライブラリのことです．実装したいプログラムの機能に応じて適切に選択する必要があります．例えば，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;効率的な多次元配列の数値計算を実現する Numpy&lt;/li&gt;
+&lt;li&gt;画像処理の機能を提供する OpenCV&lt;/li&gt;
+&lt;li&gt;グラフを簡単に描画できる Matplotlib&lt;/li&gt;
+&lt;li&gt;様々なアルゴリズムでの機械学習を可能とする scikit-learn&lt;/li&gt;
+&lt;li&gt;Webアプリの開発に役立つ Django&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;スマートフォンで言うところのゲームやチャットアプリなどのストアアプリみたいなものです．これらは自身でインストール作業をする必要がありますが，それさえ済ませば高機能な実装をいとも容易く実現できます！とても便利！！
+有志のプログラマが開発して公開してくれているため，感謝の気持ちを忘れずに使いましょう（Pythonもそうだけど）．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# サイコロの出目を出力&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dice_roll &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;サイコロの出目:&amp;#34;&lt;/span&gt;, dice_roll)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;ライブラリを確認してみよう&#34;&gt;ライブラリを確認してみよう&lt;/h2&gt;
+&lt;p&gt;では，ここからは実際に手を動かしながら解説を進めます．
+まずはスタートメニューから &lt;strong&gt;Anaconda Prompt&lt;/strong&gt; を開いてください．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;img_start.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;console_start.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;これは&lt;strong&gt;コマンドプロンプト&lt;/strong&gt;と呼ばれる画面で，ここに&lt;strong&gt;コマンド&lt;/strong&gt;と呼ばれる命令文を入力することでコンピュータを操作できます．
+試しに，ここに&lt;code&gt;tree&lt;/code&gt;と打ち込んでEnterキーを押してみてください．&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;何かツリー構造の記述がたくさん出てきたかと思います．これはディレクトリ構造をツリー形式で表示するコマンドです（あんまり使わないけど）！
+なかなか表示が終わらない場合はCtrl+Cキーでキャンセルしてください．&lt;/p&gt;
+&lt;p&gt;ではコマンドを使って，今使っているPythonで利用可能な外部ライブラリの一覧を見てみましょう！
+Anaconda Promptに&lt;code&gt;conda list&lt;/code&gt;と打ち込んでEnterキーを押してみてください．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;modules.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;インストール済みライブラリとバージョンの一覧が表示されました．既にたくさん入っているようです！&lt;/p&gt;
+&lt;p&gt;よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります．
+実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．&lt;/p&gt;
+&lt;p&gt;この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

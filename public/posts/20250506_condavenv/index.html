@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>【入門】Python仮想環境 | 箱四のブログ</title>
+<meta name="keywords" content="Python, Conda, 仮想環境">
+<meta name="description" content="ライブラリとは？
+ライブラリとは，再利用可能なソフトウェア部品のことで，特定の機能をまとめたコードの再集合のことを指します．簡単に言えば，他の人が作ってくれた機能を自身のプログラムで使える便利なコード集のことです．
+Pythonには標準ライブラリと外部ライブラリの2種類があります．
+標準ライブラリ
+標準ライブラリはPythonをインストールしたときに標準的に入っているライブラリのことです．通常のプログラム作成時に頻繁に必要となる機能をまとめたものが多くあります．例えば，
+
+乱数を作成する random
+時刻を取得できる datetime, time
+ファイルシステムへのアクセスを実現する os, shutil
+基礎的な数学関数 math
+HTMLサポート html
+URLを使ってインターネットにアクセスできる urllib
+
+スマートフォンで言うところのカメラ，アルバム，時計などのデフォルトアプリみたいなものです．これらはPythonが動く環境であれば勝手に入っているため，import ライブラリ名と記述すればすぐに利用することができます．助かる！！
+# サイコロの出目を出力
+import random
+dice_roll = random.randint(1, 6)
+print(&#34;サイコロの出目:&#34;, dice_roll)
+外部ライブラリ
+外部ライブラリはPythonにはもともと組み込まれておらず，自身で導入するタイプのライブラリのことです．実装したいプログラムの機能に応じて適切に選択する必要があります．例えば，
+
+効率的な多次元配列の数値計算を実現する Numpy
+画像処理の機能を提供する OpenCV
+グラフを簡単に描画できる Matplotlib
+様々なアルゴリズムでの機械学習を可能とする scikit-learn
+Webアプリの開発に役立つ Django
+
+スマートフォンで言うところのゲームやチャットアプリなどのストアアプリみたいなものです．これらは自身でインストール作業をする必要がありますが，それさえ済ませば高機能な実装をいとも容易く実現できます！とても便利！！
+有志のプログラマが開発して公開してくれているため，感謝の気持ちを忘れずに使いましょう（Pythonもそうだけど）．
+# サイコロの出目を出力
+import numpy as np
+dice_roll = np.random.randint(1, 7)
+print(&#34;サイコロの出目:&#34;, dice_roll)
+ライブラリを確認してみよう
+では，ここからは実際に手を動かしながら解説を進めます．
+まずはスタートメニューから Anaconda Prompt を開いてください．
+
+     
+
+
+
+     
+
+
+これはコマンドプロンプトと呼ばれる画面で，ここにコマンドと呼ばれる命令文を入力することでコンピュータを操作できます．
+試しに，ここにtreeと打ち込んでEnterキーを押してみてください．
+&hellip;&hellip;何かツリー構造の記述がたくさん出てきたかと思います．これはディレクトリ構造をツリー形式で表示するコマンドです（あんまり使わないけど）！
+なかなか表示が終わらない場合はCtrl&#43;Cキーでキャンセルしてください．
+ではコマンドを使って，今使っているPythonで利用可能な外部ライブラリの一覧を見てみましょう！
+Anaconda Promptにconda listと打ち込んでEnterキーを押してみてください．
+
+     
+
+
+インストール済みライブラリとバージョンの一覧が表示されました．既にたくさん入っているようです！
+よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります．
+実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．
+この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/blog/posts/20250506_condavenv/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/20250506_condavenv/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/blog/" accesskey="h" title="箱四のブログ (Alt + H)">
+                <img src="http://localhost:1313/blog/favicon.ico" alt="" aria-label="logo"
+                    height="30">箱四のブログ</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/blog/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/blog/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/blog/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      【入門】Python仮想環境
+    </h1>
+    <div class="post-meta"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="ライブラリとは">ライブラリとは？<a hidden class="anchor" aria-hidden="true" href="#ライブラリとは">#</a></h2>
+<p><strong>ライブラリ</strong>とは，再利用可能なソフトウェア部品のことで，特定の機能をまとめたコードの再集合のことを指します．簡単に言えば，他の人が作ってくれた機能を自身のプログラムで使える便利なコード集のことです．
+Pythonには<strong>標準ライブラリ</strong>と<strong>外部ライブラリ</strong>の2種類があります．</p>
+<h3 id="標準ライブラリ">標準ライブラリ<a hidden class="anchor" aria-hidden="true" href="#標準ライブラリ">#</a></h3>
+<p>標準ライブラリはPythonをインストールしたときに標準的に入っているライブラリのことです．通常のプログラム作成時に頻繁に必要となる機能をまとめたものが多くあります．例えば，</p>
+<ul>
+<li>乱数を作成する random</li>
+<li>時刻を取得できる datetime, time</li>
+<li>ファイルシステムへのアクセスを実現する os, shutil</li>
+<li>基礎的な数学関数 math</li>
+<li>HTMLサポート html</li>
+<li>URLを使ってインターネットにアクセスできる urllib</li>
+</ul>
+<p>スマートフォンで言うところのカメラ，アルバム，時計などのデフォルトアプリみたいなものです．これらはPythonが動く環境であれば勝手に入っているため，<code>import ライブラリ名</code>と記述すればすぐに利用することができます．助かる！！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># サイコロの出目を出力</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>dice_roll <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;サイコロの出目:&#34;</span>, dice_roll)
+</span></span></code></pre></div><h3 id="外部ライブラリ">外部ライブラリ<a hidden class="anchor" aria-hidden="true" href="#外部ライブラリ">#</a></h3>
+<p>外部ライブラリはPythonにはもともと組み込まれておらず，自身で導入するタイプのライブラリのことです．実装したいプログラムの機能に応じて適切に選択する必要があります．例えば，</p>
+<ul>
+<li>効率的な多次元配列の数値計算を実現する Numpy</li>
+<li>画像処理の機能を提供する OpenCV</li>
+<li>グラフを簡単に描画できる Matplotlib</li>
+<li>様々なアルゴリズムでの機械学習を可能とする scikit-learn</li>
+<li>Webアプリの開発に役立つ Django</li>
+</ul>
+<p>スマートフォンで言うところのゲームやチャットアプリなどのストアアプリみたいなものです．これらは自身でインストール作業をする必要がありますが，それさえ済ませば高機能な実装をいとも容易く実現できます！とても便利！！
+有志のプログラマが開発して公開してくれているため，感謝の気持ちを忘れずに使いましょう（Pythonもそうだけど）．</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># サイコロの出目を出力</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>dice_roll <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;サイコロの出目:&#34;</span>, dice_roll)
+</span></span></code></pre></div><h2 id="ライブラリを確認してみよう">ライブラリを確認してみよう<a hidden class="anchor" aria-hidden="true" href="#ライブラリを確認してみよう">#</a></h2>
+<p>では，ここからは実際に手を動かしながら解説を進めます．
+まずはスタートメニューから <strong>Anaconda Prompt</strong> を開いてください．</p>
+<figure class="center">
+    <img loading="lazy" src="img_start.png"/> 
+</figure>
+
+<figure class="center">
+    <img loading="lazy" src="console_start.png"/> 
+</figure>
+
+<p>これは<strong>コマンドプロンプト</strong>と呼ばれる画面で，ここに<strong>コマンド</strong>と呼ばれる命令文を入力することでコンピュータを操作できます．
+試しに，ここに<code>tree</code>と打ち込んでEnterキーを押してみてください．</p>
+<p>&hellip;&hellip;何かツリー構造の記述がたくさん出てきたかと思います．これはディレクトリ構造をツリー形式で表示するコマンドです（あんまり使わないけど）！
+なかなか表示が終わらない場合はCtrl+Cキーでキャンセルしてください．</p>
+<p>ではコマンドを使って，今使っているPythonで利用可能な外部ライブラリの一覧を見てみましょう！
+Anaconda Promptに<code>conda list</code>と打ち込んでEnterキーを押してみてください．</p>
+<figure class="center">
+    <img loading="lazy" src="modules.png"/> 
+</figure>
+
+<p>インストール済みライブラリとバージョンの一覧が表示されました．既にたくさん入っているようです！</p>
+<p>よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります．
+実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．</p>
+<p>この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．</p>
+<p>実はライブラリは，機能を実現するために別のライブラリを参照するケースがあります．例えば，</p>
+<ul>
+<li>画像処理を実現するOpenCVには，画像を配列として扱うためにNumpyが必要</li>
+<li>グラフを描画するMatplotlibには，画像描画のためにPillowが必要</li>
+<li>機械学習を実現するscikit-learnには，高度な数値計算をするためにScipyが必要</li>
+</ul>
+<p>またライブラリはバージョンによって提供される機能が変化することがあります．そのため，同じ実行環境に特定のバージョンを指定して参照ライブラリを導入しておく必要があるのです．</p>
+<p>これを，ライブラリの<strong>依存関係</strong>と言います．この依存関係が原因で複数のライブラリを導入するときに問題が発生する可能性があるんです．</p>
+<p>例えば，ライブラリA-C及びB-Cの依存関係があるとき，AとBが共存するためにはCのバージョンが整合している必要があります．</p>
+<p>こうしたライブラリバージョンの試行錯誤を行う場合，先程表示させた複雑に依存関係が絡み合ったライブラリ群を扱うのはなかなか骨が折れます．</p>
+<p>また，不要なライブラリは更に混乱を引き起こすので必要となる機能のための<strong>最小構成</strong>で開発環境を整える必要があります．</p>
+<p>そこで役立つのが，<strong>仮想環境</strong>です！！！（やっと本題）</p>
+<h2 id="仮想環境">仮想環境<a hidden class="anchor" aria-hidden="true" href="#仮想環境">#</a></h2>
+<p><strong>仮想環境</strong>とは，プログラムを動かすときに仮に作って利用する動作環境のことです．
+簡単に言うと「依存関係の解決が面倒だから，まっさらな世界を一から創造すればいいじゃん！！」です．</p>
+<p>では，実際に作ってみましょう．</p>
+<ol>
+<li>先ほど開いたAnaconda Promptに<code>conda create -n test python=3.12</code>と打ち込んで実行（<code>Proceed([y]/n)?</code>には<code>y</code>を入力して処理を続行）</li>
+<li><code>conda activate test</code>と打ち込んで実行</li>
+</ol>
+<p>ここでは，testという名前の仮想環境を作成してその環境に切り替える，という作業をしてもらいました．
+最新行の左側が<code>(test)</code>と表示されていれば成功です！</p>
+<figure class="center">
+    <img loading="lazy" src="test_env.png"/> 
+</figure>
+
+<p>先ほどまでは<code>(base)</code>と表示されていたはずです．Anacondaではデフォルトでbase環境があり，そこにたくさんのライブラリがありました．
+では<code>conda list</code>で現在の<code>test</code>環境のライブラリ構成を見てみましょう！</p>
+<p>base環境と比べてライブラリの数がかなり少なくなったはずです．ここに表示されているライブラリはPython3.12に付随する必要最低限のライブラリです．
+このきれいな環境に最小限の適切なライブラリを導入することで，快適なコーディングライフを送ることができます！！</p>
+<h2 id="番外編conda仮想環境の管理">番外編：Conda仮想環境の管理<a hidden class="anchor" aria-hidden="true" href="#番外編conda仮想環境の管理">#</a></h2>
+<p>複数の仮想環境を扱うときに便利なコマンドをまとめておきます！</p>
+<p>仮想環境の作成（環境名がtest，Python3.12の場合）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>conda create -n test python=3.12
+</span></span></code></pre></div><p>仮想環境への移行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>conda activate test
+</span></span></code></pre></div><p>仮想環境から離脱</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>conda deactivate
+</span></span></code></pre></div><p>仮想環境の削除</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>conda remove -n test --all
+</span></span></code></pre></div><p>仮想環境一覧の表示</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>conda info -e
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/blog/tags/python/">Python</a></li>
+      <li><a href="http://localhost:1313/blog/tags/conda/">Conda</a></li>
+      <li><a href="http://localhost:1313/blog/tags/%E4%BB%AE%E6%83%B3%E7%92%B0%E5%A2%83/">仮想環境</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/blog/">箱四のブログ</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

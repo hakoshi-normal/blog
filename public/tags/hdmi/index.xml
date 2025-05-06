@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>HDMI on 箱四のブログ</title>
+    <link>http://localhost:1313/blog/tags/hdmi/</link>
+    <description>Recent content in HDMI on 箱四のブログ</description>
+    <generator>Hugo -- 0.147.1</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Mon, 25 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/hdmi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>映像入力の遅延をPyAVで解決してみる</title>
+      <link>http://localhost:1313/blog/posts/20231225_getframebypyav/</link>
+      <pubDate>Mon, 25 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231225_getframebypyav/</guid>
+      <description>&lt;h2 id=&#34;ビデオカメラからopencvで映像取得低品質&#34;&gt;ビデオカメラからOpenCVで映像取得（低品質）&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34;&gt;麻雀自動採譜&lt;/a&gt;の実装において，卓上を撮影する天カメとしてFull HDで映像記録が可能な家庭用ビデオカメラを取り付けた．&lt;/p&gt;
+&lt;p&gt;ビデオカメラにはHDMIの出力端子があり，HDMI to USB Cに変換できる&lt;a href=&#34;https://amzn.asia/d/jclJASJ&#34;&gt;ビデオキャプチャカード&lt;/a&gt;を導入．
+これでビデオカメラをWebカメラみたく使えるぞ！やった！！&lt;/p&gt;
+&lt;p&gt;と思った矢先，&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;なんか遅い気がする！！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;よくあるOpenCVでWebカメラの映像を取得するプログラムを走らせると，&lt;strong&gt;1秒遅延＋低FPS＋低画質&lt;/strong&gt;という散々な結果に&lt;/p&gt;
+&lt;p&gt;お前 Full HD で 30FPS 出るって言ってたじゃないか&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;キャプチャカードが悪いのか，もともとそんな高品質は無理なのか，いろいろ考えた挙げ句，似た症状を以前どっかで見たのを思い出しました．&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/2023_12_01_getframertsp/&#34;&gt;RTSP通信でカメラの映像を受信してみる&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;このときもRTSP通信による映像入力がOpenCVでは遅延＆低FPSだった．
+今回も&lt;a href=&#34;https://pyav.org/docs/develop/index.html&#34; target=&#34;_blank&#34;&gt;PyAV&lt;/a&gt;を使えば解決するかもしれない．&lt;/p&gt;
+&lt;h2 id=&#34;ビデオカメラからpyavで映像取得&#34;&gt;ビデオカメラからPyAVで映像取得&lt;/h2&gt;
+&lt;p&gt;PyAVでPCに有線接続されたカメラから映像を取得する．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; cv2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; av
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;con_options  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  dict(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    video_size&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;1920x1080&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    vcodec&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mjpeg&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    framerate&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;30&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rtbufsize&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;device_name  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USB Video&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;con_def  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  dict(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;dshow&amp;#39;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;video=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;device_name&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    options&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;dict(con_options, video_device_number&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;) )
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;container &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; av&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;open(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;con_def)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; frame &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode(video&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    frame &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;to_ndarray(format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bgr24&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# cv2.imshow(&amp;#34;test_window&amp;#34;, frame)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# cv2.waitKey(1)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ちなみにカメラデバイス名はffmpegをインストールしてるなら以下のコマンドで確認できる．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffmpeg -list_devices true -f dshow -i dummy
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;PyAVはFFmpegのPythonバインディングらしいので，デバイス名の自動取得も可能かもしれない．subprocessモジュールを使えば上のコマンドでも可能．&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

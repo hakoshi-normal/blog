@@ -6,6 +6,112 @@
     <description>Recent content in Tags on 箱四のブログ</description>
     <generator>Hugo -- 0.147.1</generator>
     <language>ja-jp</language>
+    <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Conda</title>
+      <link>http://localhost:1313/blog/tags/conda/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/conda/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Labelme</title>
+      <link>http://localhost:1313/blog/tags/labelme/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/labelme/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Python</title>
+      <link>http://localhost:1313/blog/tags/python/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/python/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>YOLO，JupyterLab，Python</title>
+      <link>http://localhost:1313/blog/tags/yolojupyterlabpython/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/yolojupyterlabpython/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>YOLO，アノテーション</title>
+      <link>http://localhost:1313/blog/tags/yolo%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/yolo%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>仮想環境</title>
+      <link>http://localhost:1313/blog/tags/%E4%BB%AE%E6%83%B3%E7%92%B0%E5%A2%83/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/%E4%BB%AE%E6%83%B3%E7%92%B0%E5%A2%83/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>MediaPipe</title>
+      <link>http://localhost:1313/blog/tags/mediapipe/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/mediapipe/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenCV</title>
+      <link>http://localhost:1313/blog/tags/opencv/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/opencv/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>麻雀自動採譜</title>
+      <link>http://localhost:1313/blog/tags/%E9%BA%BB%E9%9B%80%E8%87%AA%E5%8B%95%E6%8E%A1%E8%AD%9C/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/%E9%BA%BB%E9%9B%80%E8%87%AA%E5%8B%95%E6%8E%A1%E8%AD%9C/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Multiprocessing</title>
+      <link>http://localhost:1313/blog/tags/multiprocessing/</link>
+      <pubDate>Tue, 26 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/multiprocessing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>YOLOv8</title>
+      <link>http://localhost:1313/blog/tags/yolov8/</link>
+      <pubDate>Tue, 26 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/yolov8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>並列処理</title>
+      <link>http://localhost:1313/blog/tags/%E4%B8%A6%E5%88%97%E5%87%A6%E7%90%86/</link>
+      <pubDate>Tue, 26 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/%E4%B8%A6%E5%88%97%E5%87%A6%E7%90%86/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>HDMI</title>
+      <link>http://localhost:1313/blog/tags/hdmi/</link>
+      <pubDate>Mon, 25 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/hdmi/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PyAV</title>
+      <link>http://localhost:1313/blog/tags/pyav/</link>
+      <pubDate>Mon, 25 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/pyav/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RTSP</title>
+      <link>http://localhost:1313/blog/tags/rtsp/</link>
+      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/tags/rtsp/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

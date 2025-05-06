@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>並列処理 on 箱四のブログ</title>
+    <link>http://localhost:1313/blog/tags/%E4%B8%A6%E5%88%97%E5%87%A6%E7%90%86/</link>
+    <description>Recent content in 並列処理 on 箱四のブログ</description>
+    <generator>Hugo -- 0.147.1</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 26 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/%E4%B8%A6%E5%88%97%E5%87%A6%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>リアルタイムの映像入力に対してFPSを落とさずに画像処理したい</title>
+      <link>http://localhost:1313/blog/posts/20231226_multiprocessingforrealtimevideo/</link>
+      <pubDate>Tue, 26 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231226_multiprocessingforrealtimevideo/</guid>
+      <description>&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/2023_12_01_multiprocessingforyolov8/&#34; target=&#34;_blank&#34;&gt;複数カメラの入力に対しYOLOv8で並列推論する&lt;/a&gt;のソースコード解説です．
+解説のため，一部表現を変えている部分があります．&lt;/p&gt;
+&lt;p&gt;大まかな流れは以下の通り．&lt;/p&gt;
+&lt;ol start=&#34;0&#34;&gt;
+&lt;li&gt;共有メモリ確保&lt;/li&gt;
+&lt;li&gt;フレーム入力プロセス
+&lt;ol&gt;
+&lt;li&gt;カメラからフレームを取得&lt;/li&gt;
+&lt;li&gt;フレームを共有メモリ1に保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;推論プロセス
+&lt;ol&gt;
+&lt;li&gt;共有フレームを呼び出し&lt;/li&gt;
+&lt;li&gt;推論&lt;/li&gt;
+&lt;li&gt;推論結果を描画したフレームを共有メモリ2に保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;フレーム表示プロセス
+&lt;ol&gt;
+&lt;li&gt;共有フレームを呼び出し&lt;/li&gt;
+&lt;li&gt;フレームの画面描画&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;プロセス間の遷移はmultiprocessingモジュールのEvent関数をフラグとして利用します．
+カメラの台数が増えた場合はプロセス数を増やせば対応できます．&lt;/p&gt;
+&lt;h2 id=&#34;事前準備&#34;&gt;事前準備&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;設定情報&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cam_N &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# カメラ台数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;proccess_N &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# カメラ1台あたりのプロセス数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;frame_info &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;nbytes&amp;#34;&lt;/span&gt; : frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;nbytes,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;shape&amp;#34;&lt;/span&gt; : frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;shape,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dtype&amp;#34;&lt;/span&gt; : frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;dtype}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;フレームのサイズや型はメモリ確保，呼び出し時に必要になります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;共有メモリの確保&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;shm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; shared_memory&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;SharedMemory(create&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;, size&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;nbytes, name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_name)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;共有メモリの確保はこの一文でできます．めっちゃ便利ですね．
+ただし，mem_nameを動的に作成して複数の共有メモリを確保する場合，注意事項があります．
+shared_memory.SharedMemoryの戻り値を格納する変数（上記コードではshm）を設定しなかった場合や上書きした場合，それ以前の共有メモリ領域は参照できなくなります．その場合はshmを格納するリストを用意しておくとアクセス可能になります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロセスの立ち上げ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Process(target&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;関数名, args&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;(引数,))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;start() &lt;span style=&#34;color:#75715e&#34;&gt;# プロセス開始&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;join() &lt;span style=&#34;color:#75715e&#34;&gt;# プロセス終了&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;複数プロセスを立ち上げる場合は p をリストに入れておくと管理が楽です．&lt;/p&gt;
+&lt;h2 id=&#34;フレーム入力プロセス&#34;&gt;フレーム入力プロセス&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rec_cam&lt;/span&gt;(cam_id, pre_flags, frame_info):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        cap &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cv2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VideoCapture(cam_id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            _, frame &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            idx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (cam_id)&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;proccess_N&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;counter&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;proccess_N
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            mem_name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;shared&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;idx&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;02&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            shm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; shared_memory&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;SharedMemory(name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;mem_name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            frame_sh &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ndarray(shape&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;frame_info[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;shape&amp;#34;&lt;/span&gt;], dtype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;frame_info[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dtype&amp;#34;&lt;/span&gt;], buffer&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;shm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;buf)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            frame_sh[:] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; frame[:]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;# 推論開始&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            pre_flags[idx]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;set()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;multiprocessingのSharedMemoryでは共有メモリを名前をつけて呼び出すことができます．便利！
+ここでは，&amp;ldquo;shared1[番号]&amp;ldquo;という名前で共有メモリを確保している（後述）．カメラ台数✕カメラあたりのプロセス数分の共有メモリ領域が必要になるため，
+あるカメラのあるフレームに対する保存領域は，カメラ番号✕カメラ1台あたりのプロセス数＋フレーム番号%カメラ1台あたりのプロセス数で求めることができる．と同時にこの番号は推論プロセスを動作させるフラグ管理のインデックスとしても使う．&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

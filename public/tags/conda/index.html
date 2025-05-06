@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Conda | 箱四のブログ</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/blog/tags/conda/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blog/tags/conda/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/tags/conda/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/blog/" accesskey="h" title="箱四のブログ (Alt + H)">
+                <img src="http://localhost:1313/blog/favicon.ico" alt="" aria-label="logo"
+                    height="30">箱四のブログ</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/blog/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/blog/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/blog/tags/">Tags</a></div>
+  <h1>
+    Conda
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">【入門】Python仮想環境
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>ライブラリとは？ ライブラリとは，再利用可能なソフトウェア部品のことで，特定の機能をまとめたコードの再集合のことを指します．簡単に言えば，他の人が作ってくれた機能を自身のプログラムで使える便利なコード集のことです． Pythonには標準ライブラリと外部ライブラリの2種類があります．
+標準ライブラリ 標準ライブラリはPythonをインストールしたときに標準的に入っているライブラリのことです．通常のプログラム作成時に頻繁に必要となる機能をまとめたものが多くあります．例えば，
+乱数を作成する random 時刻を取得できる datetime, time ファイルシステムへのアクセスを実現する os, shutil 基礎的な数学関数 math HTMLサポート html URLを使ってインターネットにアクセスできる urllib スマートフォンで言うところのカメラ，アルバム，時計などのデフォルトアプリみたいなものです．これらはPythonが動く環境であれば勝手に入っているため，import ライブラリ名と記述すればすぐに利用することができます．助かる！！
+# サイコロの出目を出力 import random dice_roll = random.randint(1, 6) print(&#34;サイコロの出目:&#34;, dice_roll) 外部ライブラリ 外部ライブラリはPythonにはもともと組み込まれておらず，自身で導入するタイプのライブラリのことです．実装したいプログラムの機能に応じて適切に選択する必要があります．例えば，
+効率的な多次元配列の数値計算を実現する Numpy 画像処理の機能を提供する OpenCV グラフを簡単に描画できる Matplotlib 様々なアルゴリズムでの機械学習を可能とする scikit-learn Webアプリの開発に役立つ Django スマートフォンで言うところのゲームやチャットアプリなどのストアアプリみたいなものです．これらは自身でインストール作業をする必要がありますが，それさえ済ませば高機能な実装をいとも容易く実現できます！とても便利！！ 有志のプログラマが開発して公開してくれているため，感謝の気持ちを忘れずに使いましょう（Pythonもそうだけど）．
+# サイコロの出目を出力 import numpy as np dice_roll = np.random.randint(1, 7) print(&#34;サイコロの出目:&#34;, dice_roll) ライブラリを確認してみよう では，ここからは実際に手を動かしながら解説を進めます． まずはスタートメニューから Anaconda Prompt を開いてください．
+これはコマンドプロンプトと呼ばれる画面で，ここにコマンドと呼ばれる命令文を入力することでコンピュータを操作できます． 試しに，ここにtreeと打ち込んでEnterキーを押してみてください．
+……何かツリー構造の記述がたくさん出てきたかと思います．これはディレクトリ構造をツリー形式で表示するコマンドです（あんまり使わないけど）！ なかなか表示が終わらない場合はCtrl&#43;Cキーでキャンセルしてください．
+ではコマンドを使って，今使っているPythonで利用可能な外部ライブラリの一覧を見てみましょう！ Anaconda Promptにconda listと打ち込んでEnterキーを押してみてください．
+インストール済みライブラリとバージョンの一覧が表示されました．既にたくさん入っているようです！
+よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります． 実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．
+この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 【入門】Python仮想環境" href="http://localhost:1313/blog/posts/20250506_condavenv/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/blog/">箱四のブログ</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

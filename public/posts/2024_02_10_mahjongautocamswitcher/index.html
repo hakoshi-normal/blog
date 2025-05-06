@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>麻雀放送対局用のオートスイッチャーを作りたい | 箱四のブログ</title>
+<meta name="keywords" content="Python, OpenCV, MediaPipe, 麻雀自動採譜">
+<meta name="description" content="はじめに
+自動採譜プロジェクトの息抜き的な記事です．
+せっかく全自動雀卓があって，手元用カメラが4台あるんだから，麻雀の配信とか出来たら嬉しいよね～とか言う話の流れになりまして，
+ところが同卓者を募るので精一杯な状況で配信スタッフをおくわけにもいかない．だったらカメラの切り替えぐらいは自動化しちゃおう！！ってのがこの記事の主旨です．
+カメラ切り替えトリガー
+カメラの切り替えトリガーを「牌山にプレーヤーが触れたタイミング」と設定しました．
+自動採譜プロジェクトの実装作業も視野に入れて，手牌変化を監視する手法も無くはないです．ただし，牌検出に計算コストがかかること，カメラ切り替えが牌検出精度に依存してしまうことを考慮し，今回はよりシンプルな方法を選択しました．
+ツモ位置の検出
+まず，天カメの映像から卓上のツモ位置を特定する必要があります．牌山の形を見てみましょう．
+対局開始前はこんな感じ．
+
+     
+
+
+対局開始直後はこんな感じ．
+
+     
+
+
+対局中はこんな感じ．
+
+     
+
+
+対局開始前は4つ牌山がありますが，対局開始以降は牌山が必ず3つ以下になります王牌の扱い上，4つのときもあります．
+
+
+牌山が3つのとき
+牌山の並びを時計回りに見た際に，牌山が何もない場合は隣の牌山の端点がツモ位置になります．
+
+
+牌山が4つのとき
+一つの家に2つ矩形が検出された場合，それを王牌と判定し，ツモ位置を特定します．
+
+
+
+     
+
+
+実装の流れとしては，麻雀牌背面色部分を天カメ映像から取得し，そこから矩形を検出しています．手牌や河などから発生する検出ミスは矩形領域の面積や画素成分などで例外処理をしています．
+牌山検出後，卓全体をXの字に4分割し，矩形の重心位置に基づき分類しています．
+実装概要
+元画像です．読み込み時に卓の形状に合わせてトリミングしておきます．リアルタイムの牌山検出を行う際はノイズ軽減のため，鳴き牌表示部分と卓中央部分は予めマスク処理を行っておきます．
+
+     
+
+
+cv2.inRange()を使用し，画像中の麻雀牌の背面色を絞り込みます．その際，クロージング処理を行いノイズの発生を抑制します．
+
+     
+
+
+二値化した画像に対し，cv2.findContours()を使用し，牌山となりうる矩形を検出します．
+手牌や鳴き牌，不意に伏せた牌が矩形として検出されてしまうため，矩形の座標，矩形の最小サイズ，矩形内の画素成分などにより牌山を絞り込みます．
+その後，特定した牌山の中心位置に基づきツモ牌の位置を特定します．
+
+     
+
+
+ツモプレイヤーの検出
+ツモ動作をしたプレイヤーをリアルタイムで監視するため，画像中から手指検出をおこない，人差し指の位置に基づきツモ動作を検出します．
+MediaPipe
+のハンドトラッキングを使って，前節のツモ位置と人差し指が近づいたタイミングをツモとして判定します．
+今回は処理負荷軽減のため，手指検出をツモ牌の周辺に限定して推論を行っています．
+
+     
+
+
+プレイヤーの識別には，手首の座標と中指付け根の座標から成る線分の角度を求め，角度を4分割して識別しました．
+
+     
+
+
+オートスイッチャー実装！！！
+OBSを使用して配信するため，カメラ切り替えには
+obs-websocket-py
+を使用しました．こちらの
+サンプル
+がそのまま動作して助かりました．">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/blog/posts/2024_02_10_mahjongautocamswitcher/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/2024_02_10_mahjongautocamswitcher/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/blog/" accesskey="h" title="箱四のブログ (Alt + H)">
+                <img src="http://localhost:1313/blog/favicon.ico" alt="" aria-label="logo"
+                    height="30">箱四のブログ</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/blog/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/blog/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/blog/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      麻雀放送対局用のオートスイッチャーを作りたい
+    </h1>
+    <div class="post-meta"><span title='2024-02-10 00:00:00 +0000 UTC'>February 10, 2024</span>&nbsp;·&nbsp;1 min
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="はじめに">はじめに<a hidden class="anchor" aria-hidden="true" href="#はじめに">#</a></h2>
+<p><!-- raw HTML omitted -->自動採譜プロジェクト<!-- raw HTML omitted -->の息抜き的な記事です．</p>
+<p>せっかく全自動雀卓があって，手元用カメラが4台あるんだから，麻雀の配信とか出来たら嬉しいよね～とか言う話の流れになりまして，
+ところが同卓者を募るので精一杯な状況で配信スタッフをおくわけにもいかない．だったらカメラの切り替えぐらいは自動化しちゃおう！！ってのがこの記事の主旨です．</p>
+<h2 id="カメラ切り替えトリガー">カメラ切り替えトリガー<a hidden class="anchor" aria-hidden="true" href="#カメラ切り替えトリガー">#</a></h2>
+<p>カメラの切り替えトリガーを「<strong>牌山にプレーヤーが触れたタイミング</strong>」と設定しました．</p>
+<p>自動採譜プロジェクトの実装作業も視野に入れて，手牌変化を監視する手法も無くはないです．ただし，牌検出に計算コストがかかること，カメラ切り替えが牌検出精度に依存してしまうことを考慮し，今回はよりシンプルな方法を選択しました．</p>
+<h2 id="ツモ位置の検出">ツモ位置の検出<a hidden class="anchor" aria-hidden="true" href="#ツモ位置の検出">#</a></h2>
+<p>まず，天カメの映像から卓上のツモ位置を特定する必要があります．<!-- raw HTML omitted -->牌山の形を見てみましょう．</p>
+<p>対局開始前はこんな感じ．</p>
+<figure class="center">
+    <img loading="lazy" src="t_0.png"/> 
+</figure>
+
+<p>対局開始直後はこんな感じ．</p>
+<figure class="center">
+    <img loading="lazy" src="t_1.png"/> 
+</figure>
+
+<p>対局中はこんな感じ．</p>
+<figure class="center">
+    <img loading="lazy" src="t_2.png"/> 
+</figure>
+
+<p>対局開始前は4つ牌山がありますが，対局開始以降は牌山が<del>必ず3つ以下になります</del>王牌の扱い上，4つのときもあります．</p>
+<ul>
+<li>
+<p>牌山が3つのとき</p>
+<p>牌山の並びを時計回りに見た際に，牌山が何もない場合は隣の牌山の端点がツモ位置になります．</p>
+</li>
+<li>
+<p>牌山が4つのとき</p>
+<p>一つの家に2つ矩形が検出された場合，それを王牌と判定し，ツモ位置を特定します．</p>
+</li>
+</ul>
+<figure class="center">
+    <img loading="lazy" src="fig1.png"/> 
+</figure>
+
+<p>実装の流れとしては，麻雀牌背面色部分を天カメ映像から取得し，そこから矩形を検出しています．手牌や河などから発生する検出ミスは矩形領域の面積や画素成分などで例外処理をしています．</p>
+<p>牌山検出後，卓全体をXの字に4分割し，矩形の重心位置に基づき分類しています．</p>
+<h3 id="実装概要">実装概要<a hidden class="anchor" aria-hidden="true" href="#実装概要">#</a></h3>
+<p>元画像です．読み込み時に卓の形状に合わせてトリミングしておきます．リアルタイムの牌山検出を行う際はノイズ軽減のため，鳴き牌表示部分と卓中央部分は予めマスク処理を行っておきます．
+<figure class="center">
+    <img loading="lazy" src="original_image.png"/> 
+</figure>
+</p>
+<p><code>cv2.inRange()</code>を使用し，画像中の麻雀牌の背面色を絞り込みます．その際，クロージング処理を行いノイズの発生を抑制します．</p>
+<figure class="center">
+    <img loading="lazy" src="mask_hai.png"/> 
+</figure>
+
+<p>二値化した画像に対し，<code>cv2.findContours()</code>を使用し，牌山となりうる矩形を検出します．</p>
+<p>手牌や鳴き牌，不意に伏せた牌が矩形として検出されてしまうため，矩形の座標，矩形の最小サイズ，矩形内の画素成分などにより牌山を絞り込みます．
+その後，特定した牌山の中心位置に基づきツモ牌の位置を特定します．</p>
+<figure class="center">
+    <img loading="lazy" src="tsumohai.png"/> 
+</figure>
+
+<h2 id="ツモプレイヤーの検出">ツモプレイヤーの検出<a hidden class="anchor" aria-hidden="true" href="#ツモプレイヤーの検出">#</a></h2>
+<p>ツモ動作をしたプレイヤーをリアルタイムで監視するため，画像中から手指検出をおこない，人差し指の位置に基づきツモ動作を検出します．
+<!-- raw HTML omitted -->MediaPipe<!-- raw HTML omitted -->
+のハンドトラッキングを使って，前節のツモ位置と人差し指が近づいたタイミングをツモとして判定します．
+今回は処理負荷軽減のため，手指検出をツモ牌の周辺に限定して推論を行っています．</p>
+<figure class="center">
+    <img loading="lazy" src="tsumo1.png"/> 
+</figure>
+
+<p>プレイヤーの識別には，手首の座標と中指付け根の座標から成る線分の角度を求め，角度を4分割して識別しました．</p>
+<figure class="center">
+    <img loading="lazy" src="tsumo2.png"/> 
+</figure>
+
+<h2 id="オートスイッチャー実装">オートスイッチャー実装！！！<a hidden class="anchor" aria-hidden="true" href="#オートスイッチャー実装">#</a></h2>
+<p>OBSを使用して配信するため，カメラ切り替えには
+<!-- raw HTML omitted -->obs-websocket-py<!-- raw HTML omitted -->
+を使用しました．こちらの
+<!-- raw HTML omitted -->サンプル<!-- raw HTML omitted -->
+がそのまま動作して助かりました．</p>
+<p>GUI実装にはHTML/JSでの記述が可能な
+<!-- raw HTML omitted -->Eel<!-- raw HTML omitted -->
+を使用しました．GUI設計ライブラリ毎の独自記法を覚える必要がないので，かなり重宝しています．</p>
+<p>実際の動作の様子がこちら．</p>
+<video controls preload="auto" width="100%"  playsinline class="html-video">
+    <source src="/blog/posts/2024_02_10_mahjongautocamswitcher/cam_switcher_test.mp4" type="video/mp4">
+  <span>Your browser doesn't support embedded videos, but don't worry, you can <a href="/blog/posts/2024_02_10_mahjongautocamswitcher/cam_switcher_test.mp4">download it</a> and watch it with your favorite video player!</span>
+</video>
+<p>現時点では鳴きには対応してないので，手動切替機能も実装しています．とはいえ鳴いた牌を監視すればたぶん容易に検出可能なので，追々実装したいですね．</p>
+<p>あと，牌山をずらす行為についても実装上では判定の対象となっています．これは両手で牌山をずらした場合に例外としてカメラ切り替えを行わない設計にすればある程度は回避できる問題です．ただし，自身のツモ番に牌山をずらすのは問題ないので，とりあえず保留ですね．</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/blog/tags/python/">Python</a></li>
+      <li><a href="http://localhost:1313/blog/tags/opencv/">OpenCV</a></li>
+      <li><a href="http://localhost:1313/blog/tags/mediapipe/">MediaPipe</a></li>
+      <li><a href="http://localhost:1313/blog/tags/%E9%BA%BB%E9%9B%80%E8%87%AA%E5%8B%95%E6%8E%A1%E8%AD%9C/">麻雀自動採譜</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/blog/">箱四のブログ</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

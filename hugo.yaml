@@ -1,8 +1,49 @@
 baseURL: https://hakoshi-normal.github.io/blog/
 languageCode: ja-jp
 title: 箱四のブログ
-theme: ["PaperMod"]
+theme: ["hugo-video", "PaperMod"]
+ignoreLogs : ["warning-goldmark-raw-html"]
 
 caches:
   images:
     dir: :cacheDir/images
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+menu:
+  main:
+    - name: Archive
+      url: archives
+      weight: 5
+    - name: Search
+      url: search/
+      weight: 10
+    - name: Tags
+      url: tags/
+      weight: 10
+
+params:
+  defaultTheme: auto
+  ShowReadingTime: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  homeInfoParams:
+    Title: 箱四のブログ
+    Content: 🚧工事中🚧
+  label:
+    icon: "favicon.ico"
+
+assets:
+  favicon: "favicon.ico"
+  favicon16x16: "img/favicon-16x16.png"
+  favicon32x32: "img/favicon-32x32.png"
+  apple_touch_icon: "img/apple-touch-icon.png"
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true

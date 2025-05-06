@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Labelme on 箱四のブログ</title>
+    <link>http://localhost:1313/blog/tags/labelme/</link>
+    <description>Recent content in Labelme on 箱四のブログ</description>
+    <generator>Hugo -- 0.147.1</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/labelme/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【入門】YOLOアノテーションと学習</title>
+      <link>http://localhost:1313/blog/posts/20250506_yoloannotation/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20250506_yoloannotation/</guid>
+      <description>&lt;h2 id=&#34;アノテーションとは&#34;&gt;アノテーションとは？&lt;/h2&gt;
+&lt;p&gt;機械学習の分類のひとつである&lt;strong&gt;教師あり学習&lt;/strong&gt;では，まず入力データと出力データの組を複数用意し，それらを使って機械学習モデルを訓練します．&lt;/p&gt;
+&lt;p&gt;入力データと出力データの組は，タスクによって様々です．例えば，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;入力：画像データ，出力：それぞれが犬or猫&lt;/li&gt;
+&lt;li&gt;入力：家の情報（間取り，立地，築年数など），出力：家の価格&lt;/li&gt;
+&lt;li&gt;入力：これまでの気温，出力：明日の気温&lt;/li&gt;
+&lt;li&gt;入力：画像データ，出力：各物体の座標&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;どんなタスクを前提とする場合でも，これら&lt;strong&gt;入力データと出力データの組を作る作業&lt;/strong&gt;が必要となります．これが&lt;strong&gt;アノテーション&lt;/strong&gt;です．&lt;/p&gt;
+&lt;h2 id=&#34;環境構築&#34;&gt;環境構築&lt;/h2&gt;
+&lt;p&gt;今回はYOLOによる画像物体認識を目標とします．そこで，アノテーションで作るべきデータは以下になります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;入力：画像データ，出力：各物体の座標&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;頑張れば用意した画像の座標を数えてアノテーションできそうですが，今回はより簡単に作業を進めるために&lt;strong&gt;Labelme&lt;/strong&gt;というツールを使います．GUIが整備されたソフトウェアですが，Pythonライブラリとして無償で提供されています！（ありがたい！！）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Anaconda Promptを開く&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conda create -n annot_env python=3.12&lt;/code&gt;で仮想環境を作成&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conda activate annot_env&lt;/code&gt;で仮想環境を有効化&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pip install --upgrade labelme&lt;/code&gt;と入力しLabelmeをインストール&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これでインストールは完了です．そのまま&lt;code&gt;annot_env&lt;/code&gt;環境内で&lt;code&gt;labelme&lt;/code&gt;コマンドを実行してみてください！&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;labelme.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;この画面が表示されたら成功です！&lt;/p&gt;
+&lt;h2 id=&#34;いざアノテーション&#34;&gt;いざ，アノテーション&lt;/h2&gt;
+&lt;h3 id=&#34;画像読み込み&#34;&gt;画像読み込み&lt;/h3&gt;
+&lt;p&gt;今回は画像から麻雀牌を物体認識するタスクに挑戦してみます！サンプル画像は以下からダウンロード，解凍してください．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/images.zip&#34;&gt;サンプル画像&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Zipファイルの解凍が済んだらLabelmeの画面左側にある&lt;code&gt;Open Dir&lt;/code&gt;から，画像のディレクトリを開いてください．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;labelme_start.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;これでアノテーションの準備は完了です！&lt;/p&gt;
+&lt;h3 id=&#34;範囲選択ラベル付け&#34;&gt;範囲選択，ラベル付け&lt;/h3&gt;
+&lt;p&gt;アノテーションの流れは以下になります．&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;画像を右クリック，&lt;code&gt;Create Rectangle&lt;/code&gt;をクリック&lt;/li&gt;
+&lt;li&gt;物体の範囲を四角形で囲んで選択，間違えたら&lt;code&gt;Esc&lt;/code&gt;キーで戻る&lt;/li&gt;
+&lt;li&gt;出てきたポップアップの上部&lt;code&gt;Enter object label&lt;/code&gt;にラベルを入力して&lt;code&gt;OK&lt;/code&gt;をクリック&lt;/li&gt;
+&lt;li&gt;2と3を物体の数だけひたすら繰り返す&lt;/li&gt;
+&lt;li&gt;画像内のアノテーションが終わったら画面左部&lt;code&gt;Save&lt;/code&gt;から画像と同名のJSONファイルを保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ちょっとやってみますね～&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;annotated.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;はい，できました．ラベルは牌の種類（萬子筒子索子字牌）の略称です．&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&#34;font-size: 150%; color: red;&#34;&gt;めんどくさい&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;機械学習では一般的にデータの数が大きいほど性能が上がりやすいとされています．つまり，（要件の要求レベルにもよりますが）精度を上げるためにはたくさんアノテーションする必要があるんです．&lt;/p&gt;
+&lt;p&gt;そこで，特定のタスクの機械学習を考える場合はアノテーションに取り掛かる前に，データセットが利用可能なライセンスで公開されていないかどうか調べるところからスタートします．例えばYOLOの場合，&lt;a href=&#34;https://universe.roboflow.com/&#34;&gt;Roboflow&lt;/a&gt;，&lt;a href=&#34;https://visualdata.io/discovery&#34;&gt;VisualData&lt;/a&gt;，&lt;a href=&#34;https://storage.googleapis.com/openimages/web/index.html&#34;&gt;Google Open Images Dataset&lt;/a&gt;などが画像データセットを公開している他，タスクに応じて論文と併せて公開されているデータセットも多数あります．&lt;/p&gt;
+&lt;p&gt;また今回はアノテーション入門ということで手作業での方法を紹介していますが，画像認識AIによる半自動ツールもあるので興味があれば調べてみてください．&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;今回は，なんと，特別に，アノテーション済みファイルを用意してあります！&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/labels.zip&#34;&gt;アノテーション結果（JSON）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ZIPファイルをダウンロード＆解凍したら，&lt;code&gt;datasets&lt;/code&gt;という名前のディレクトリを作成し，先程の画像ファイルとJSONファイルを以下の構造で配置してください．（&lt;code&gt;image_1.json&lt;/code&gt;は自作のファイルで構いません！）&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-planetext&#34; data-lang=&#34;planetext&#34;&gt;.
+└── datasets/
+    ├── image_1.jpg
+    ├── image_1.json
+    ├── image_2.jpg
+    ├── image_2.json
+    ├── 〜省略〜
+    ├── image_10.jpg
+    └── image_10.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;データセットフォーマットの変換&#34;&gt;データセットフォーマットの変換&lt;/h3&gt;
+&lt;p&gt;では，学習させるデータの中身を一度見てみましょう！&lt;code&gt;image_1.json&lt;/code&gt;を開いてみます．&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

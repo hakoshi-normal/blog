@@ -6,6 +6,521 @@
     <description>Recent content on 箱四のブログ</description>
     <generator>Hugo -- 0.147.1</generator>
     <language>ja-jp</language>
+    <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【入門】Python仮想環境</title>
+      <link>http://localhost:1313/blog/posts/20250506_condavenv/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20250506_condavenv/</guid>
+      <description>&lt;h2 id=&#34;ライブラリとは&#34;&gt;ライブラリとは？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;ライブラリ&lt;/strong&gt;とは，再利用可能なソフトウェア部品のことで，特定の機能をまとめたコードの再集合のことを指します．簡単に言えば，他の人が作ってくれた機能を自身のプログラムで使える便利なコード集のことです．
+Pythonには&lt;strong&gt;標準ライブラリ&lt;/strong&gt;と&lt;strong&gt;外部ライブラリ&lt;/strong&gt;の2種類があります．&lt;/p&gt;
+&lt;h3 id=&#34;標準ライブラリ&#34;&gt;標準ライブラリ&lt;/h3&gt;
+&lt;p&gt;標準ライブラリはPythonをインストールしたときに標準的に入っているライブラリのことです．通常のプログラム作成時に頻繁に必要となる機能をまとめたものが多くあります．例えば，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;乱数を作成する random&lt;/li&gt;
+&lt;li&gt;時刻を取得できる datetime, time&lt;/li&gt;
+&lt;li&gt;ファイルシステムへのアクセスを実現する os, shutil&lt;/li&gt;
+&lt;li&gt;基礎的な数学関数 math&lt;/li&gt;
+&lt;li&gt;HTMLサポート html&lt;/li&gt;
+&lt;li&gt;URLを使ってインターネットにアクセスできる urllib&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;スマートフォンで言うところのカメラ，アルバム，時計などのデフォルトアプリみたいなものです．これらはPythonが動く環境であれば勝手に入っているため，&lt;code&gt;import ライブラリ名&lt;/code&gt;と記述すればすぐに利用することができます．助かる！！&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# サイコロの出目を出力&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; random
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dice_roll &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;サイコロの出目:&amp;#34;&lt;/span&gt;, dice_roll)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;外部ライブラリ&#34;&gt;外部ライブラリ&lt;/h3&gt;
+&lt;p&gt;外部ライブラリはPythonにはもともと組み込まれておらず，自身で導入するタイプのライブラリのことです．実装したいプログラムの機能に応じて適切に選択する必要があります．例えば，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;効率的な多次元配列の数値計算を実現する Numpy&lt;/li&gt;
+&lt;li&gt;画像処理の機能を提供する OpenCV&lt;/li&gt;
+&lt;li&gt;グラフを簡単に描画できる Matplotlib&lt;/li&gt;
+&lt;li&gt;様々なアルゴリズムでの機械学習を可能とする scikit-learn&lt;/li&gt;
+&lt;li&gt;Webアプリの開発に役立つ Django&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;スマートフォンで言うところのゲームやチャットアプリなどのストアアプリみたいなものです．これらは自身でインストール作業をする必要がありますが，それさえ済ませば高機能な実装をいとも容易く実現できます！とても便利！！
+有志のプログラマが開発して公開してくれているため，感謝の気持ちを忘れずに使いましょう（Pythonもそうだけど）．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# サイコロの出目を出力&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dice_roll &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;サイコロの出目:&amp;#34;&lt;/span&gt;, dice_roll)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;ライブラリを確認してみよう&#34;&gt;ライブラリを確認してみよう&lt;/h2&gt;
+&lt;p&gt;では，ここからは実際に手を動かしながら解説を進めます．
+まずはスタートメニューから &lt;strong&gt;Anaconda Prompt&lt;/strong&gt; を開いてください．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;img_start.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;console_start.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;これは&lt;strong&gt;コマンドプロンプト&lt;/strong&gt;と呼ばれる画面で，ここに&lt;strong&gt;コマンド&lt;/strong&gt;と呼ばれる命令文を入力することでコンピュータを操作できます．
+試しに，ここに&lt;code&gt;tree&lt;/code&gt;と打ち込んでEnterキーを押してみてください．&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;何かツリー構造の記述がたくさん出てきたかと思います．これはディレクトリ構造をツリー形式で表示するコマンドです（あんまり使わないけど）！
+なかなか表示が終わらない場合はCtrl+Cキーでキャンセルしてください．&lt;/p&gt;
+&lt;p&gt;ではコマンドを使って，今使っているPythonで利用可能な外部ライブラリの一覧を見てみましょう！
+Anaconda Promptに&lt;code&gt;conda list&lt;/code&gt;と打ち込んでEnterキーを押してみてください．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;modules.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;インストール済みライブラリとバージョンの一覧が表示されました．既にたくさん入っているようです！&lt;/p&gt;
+&lt;p&gt;よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります．
+実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．&lt;/p&gt;
+&lt;p&gt;この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>【入門】YOLO，Jupyterのセットアップ</title>
+      <link>http://localhost:1313/blog/posts/20250506_yolojupyter/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20250506_yolojupyter/</guid>
+      <description>&lt;h2 id=&#34;jupyterlabvisual-studio-codeを使ったpython実行&#34;&gt;JupyterLab+Visual Studio Codeを使ったPython実行&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Visual Studio CodeにJupyter拡張機能をインストール&lt;/li&gt;
+&lt;li&gt;空のファイルを作成し，拡張子を&lt;code&gt;.ipynb&lt;/code&gt;とする&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;＋コード&lt;/code&gt;ボタンからコードブロックを作成し，Pythonプログラムを記述&lt;/li&gt;
+&lt;li&gt;右上&lt;code&gt;カーネルの選択&lt;/code&gt;から実行したいPython環境を選択し&lt;/li&gt;
+&lt;li&gt;コードブロック左側の実行ボタン&lt;code&gt;▷&lt;/code&gt;を押下&lt;/li&gt;
+&lt;li&gt;ポップアップが出てきたら&lt;code&gt;インストール&lt;/code&gt;をクリックして&lt;code&gt;ipykernel&lt;/code&gt;をインストール
+（&lt;code&gt;pip install ipykernel&lt;/code&gt;を当該環境で実行してインストールも出来ます）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;vsjupyter.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;yoloのセットアップ&#34;&gt;YOLOのセットアップ&lt;/h2&gt;
+&lt;p&gt;今回は最新のYOLOを簡単に扱うことができるUltralyticsパッケージを利用します．&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;conda create --name yolo-env python=3.11&lt;/code&gt;を実行して仮想環境を作成&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conda activate yolo-env&lt;/code&gt;で仮想環境を有効化&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pip install ultralytics&lt;/code&gt;でUltralyticsパッケージをインストール&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ここまで済んだら，テストコードを動かしてみましょう！&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; ultralytics &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; YOLO
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;model &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; YOLO(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yolo11n.pt&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;results &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; model(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://ultralytics.com/images/bus.jpg&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;results[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;バスを背景にした画像の物体検出が表示されたはずです！&lt;/p&gt;
+&lt;p&gt;作業ディレクトリを開くと，&lt;code&gt;yolo11n.pt&lt;/code&gt;というファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>【入門】YOLOアノテーションと学習</title>
+      <link>http://localhost:1313/blog/posts/20250506_yoloannotation/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20250506_yoloannotation/</guid>
+      <description>&lt;h2 id=&#34;アノテーションとは&#34;&gt;アノテーションとは？&lt;/h2&gt;
+&lt;p&gt;機械学習の分類のひとつである&lt;strong&gt;教師あり学習&lt;/strong&gt;では，まず入力データと出力データの組を複数用意し，それらを使って機械学習モデルを訓練します．&lt;/p&gt;
+&lt;p&gt;入力データと出力データの組は，タスクによって様々です．例えば，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;入力：画像データ，出力：それぞれが犬or猫&lt;/li&gt;
+&lt;li&gt;入力：家の情報（間取り，立地，築年数など），出力：家の価格&lt;/li&gt;
+&lt;li&gt;入力：これまでの気温，出力：明日の気温&lt;/li&gt;
+&lt;li&gt;入力：画像データ，出力：各物体の座標&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;どんなタスクを前提とする場合でも，これら&lt;strong&gt;入力データと出力データの組を作る作業&lt;/strong&gt;が必要となります．これが&lt;strong&gt;アノテーション&lt;/strong&gt;です．&lt;/p&gt;
+&lt;h2 id=&#34;環境構築&#34;&gt;環境構築&lt;/h2&gt;
+&lt;p&gt;今回はYOLOによる画像物体認識を目標とします．そこで，アノテーションで作るべきデータは以下になります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;入力：画像データ，出力：各物体の座標&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;頑張れば用意した画像の座標を数えてアノテーションできそうですが，今回はより簡単に作業を進めるために&lt;strong&gt;Labelme&lt;/strong&gt;というツールを使います．GUIが整備されたソフトウェアですが，Pythonライブラリとして無償で提供されています！（ありがたい！！）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Anaconda Promptを開く&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conda create -n annot_env python=3.12&lt;/code&gt;で仮想環境を作成&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conda activate annot_env&lt;/code&gt;で仮想環境を有効化&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pip install --upgrade labelme&lt;/code&gt;と入力しLabelmeをインストール&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これでインストールは完了です．そのまま&lt;code&gt;annot_env&lt;/code&gt;環境内で&lt;code&gt;labelme&lt;/code&gt;コマンドを実行してみてください！&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;labelme.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;この画面が表示されたら成功です！&lt;/p&gt;
+&lt;h2 id=&#34;いざアノテーション&#34;&gt;いざ，アノテーション&lt;/h2&gt;
+&lt;h3 id=&#34;画像読み込み&#34;&gt;画像読み込み&lt;/h3&gt;
+&lt;p&gt;今回は画像から麻雀牌を物体認識するタスクに挑戦してみます！サンプル画像は以下からダウンロード，解凍してください．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/images.zip&#34;&gt;サンプル画像&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Zipファイルの解凍が済んだらLabelmeの画面左側にある&lt;code&gt;Open Dir&lt;/code&gt;から，画像のディレクトリを開いてください．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;labelme_start.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;これでアノテーションの準備は完了です！&lt;/p&gt;
+&lt;h3 id=&#34;範囲選択ラベル付け&#34;&gt;範囲選択，ラベル付け&lt;/h3&gt;
+&lt;p&gt;アノテーションの流れは以下になります．&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;画像を右クリック，&lt;code&gt;Create Rectangle&lt;/code&gt;をクリック&lt;/li&gt;
+&lt;li&gt;物体の範囲を四角形で囲んで選択，間違えたら&lt;code&gt;Esc&lt;/code&gt;キーで戻る&lt;/li&gt;
+&lt;li&gt;出てきたポップアップの上部&lt;code&gt;Enter object label&lt;/code&gt;にラベルを入力して&lt;code&gt;OK&lt;/code&gt;をクリック&lt;/li&gt;
+&lt;li&gt;2と3を物体の数だけひたすら繰り返す&lt;/li&gt;
+&lt;li&gt;画像内のアノテーションが終わったら画面左部&lt;code&gt;Save&lt;/code&gt;から画像と同名のJSONファイルを保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ちょっとやってみますね～&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;annotated.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;はい，できました．ラベルは牌の種類（萬子筒子索子字牌）の略称です．&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&#34;font-size: 150%; color: red;&#34;&gt;めんどくさい&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;機械学習では一般的にデータの数が大きいほど性能が上がりやすいとされています．つまり，（要件の要求レベルにもよりますが）精度を上げるためにはたくさんアノテーションする必要があるんです．&lt;/p&gt;
+&lt;p&gt;そこで，特定のタスクの機械学習を考える場合はアノテーションに取り掛かる前に，データセットが利用可能なライセンスで公開されていないかどうか調べるところからスタートします．例えばYOLOの場合，&lt;a href=&#34;https://universe.roboflow.com/&#34;&gt;Roboflow&lt;/a&gt;，&lt;a href=&#34;https://visualdata.io/discovery&#34;&gt;VisualData&lt;/a&gt;，&lt;a href=&#34;https://storage.googleapis.com/openimages/web/index.html&#34;&gt;Google Open Images Dataset&lt;/a&gt;などが画像データセットを公開している他，タスクに応じて論文と併せて公開されているデータセットも多数あります．&lt;/p&gt;
+&lt;p&gt;また今回はアノテーション入門ということで手作業での方法を紹介していますが，画像認識AIによる半自動ツールもあるので興味があれば調べてみてください．&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;今回は，なんと，特別に，アノテーション済みファイルを用意してあります！&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/labels.zip&#34;&gt;アノテーション結果（JSON）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ZIPファイルをダウンロード＆解凍したら，&lt;code&gt;datasets&lt;/code&gt;という名前のディレクトリを作成し，先程の画像ファイルとJSONファイルを以下の構造で配置してください．（&lt;code&gt;image_1.json&lt;/code&gt;は自作のファイルで構いません！）&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-planetext&#34; data-lang=&#34;planetext&#34;&gt;.
+└── datasets/
+    ├── image_1.jpg
+    ├── image_1.json
+    ├── image_2.jpg
+    ├── image_2.json
+    ├── 〜省略〜
+    ├── image_10.jpg
+    └── image_10.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;データセットフォーマットの変換&#34;&gt;データセットフォーマットの変換&lt;/h3&gt;
+&lt;p&gt;では，学習させるデータの中身を一度見てみましょう！&lt;code&gt;image_1.json&lt;/code&gt;を開いてみます．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>麻雀放送対局用のオートスイッチャーを作りたい</title>
+      <link>http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/</guid>
+      <description>&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;自動採譜プロジェクト&lt;/a&gt;の息抜き的な記事です．&lt;/p&gt;
+&lt;p&gt;せっかく全自動雀卓があって，手元用カメラが4台あるんだから，麻雀の配信とか出来たら嬉しいよね～とか言う話の流れになりまして，
+ところが同卓者を募るので精一杯な状況で配信スタッフをおくわけにもいかない．だったらカメラの切り替えぐらいは自動化しちゃおう！！ってのがこの記事の主旨です．&lt;/p&gt;
+&lt;h2 id=&#34;カメラ切り替えトリガー&#34;&gt;カメラ切り替えトリガー&lt;/h2&gt;
+&lt;p&gt;カメラの切り替えトリガーを「&lt;strong&gt;牌山にプレーヤーが触れたタイミング&lt;/strong&gt;」と設定しました．&lt;/p&gt;
+&lt;p&gt;自動採譜プロジェクトの実装作業も視野に入れて，手牌変化を監視する手法も無くはないです．ただし，牌検出に計算コストがかかること，カメラ切り替えが牌検出精度に依存してしまうことを考慮し，今回はよりシンプルな方法を選択しました．&lt;/p&gt;
+&lt;h2 id=&#34;ツモ位置の検出&#34;&gt;ツモ位置の検出&lt;/h2&gt;
+&lt;p&gt;まず，天カメの映像から卓上のツモ位置を特定する必要があります．&lt;br&gt;牌山の形を見てみましょう．&lt;/p&gt;
+&lt;p&gt;対局開始前はこんな感じ．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;t_0.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;対局開始直後はこんな感じ．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;t_1.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;対局中はこんな感じ．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;t_2.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;対局開始前は4つ牌山がありますが，対局開始以降は牌山が&lt;del&gt;必ず3つ以下になります&lt;/del&gt;王牌の扱い上，4つのときもあります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;牌山が3つのとき&lt;/p&gt;
+&lt;p&gt;牌山の並びを時計回りに見た際に，牌山が何もない場合は隣の牌山の端点がツモ位置になります．&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;牌山が4つのとき&lt;/p&gt;
+&lt;p&gt;一つの家に2つ矩形が検出された場合，それを王牌と判定し，ツモ位置を特定します．&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;fig1.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;実装の流れとしては，麻雀牌背面色部分を天カメ映像から取得し，そこから矩形を検出しています．手牌や河などから発生する検出ミスは矩形領域の面積や画素成分などで例外処理をしています．&lt;/p&gt;
+&lt;p&gt;牌山検出後，卓全体をXの字に4分割し，矩形の重心位置に基づき分類しています．&lt;/p&gt;
+&lt;h3 id=&#34;実装概要&#34;&gt;実装概要&lt;/h3&gt;
+&lt;p&gt;元画像です．読み込み時に卓の形状に合わせてトリミングしておきます．リアルタイムの牌山検出を行う際はノイズ軽減のため，鳴き牌表示部分と卓中央部分は予めマスク処理を行っておきます．
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;original_image.png&#34;/&gt; 
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cv2.inRange()&lt;/code&gt;を使用し，画像中の麻雀牌の背面色を絞り込みます．その際，クロージング処理を行いノイズの発生を抑制します．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;mask_hai.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;二値化した画像に対し，&lt;code&gt;cv2.findContours()&lt;/code&gt;を使用し，牌山となりうる矩形を検出します．&lt;/p&gt;
+&lt;p&gt;手牌や鳴き牌，不意に伏せた牌が矩形として検出されてしまうため，矩形の座標，矩形の最小サイズ，矩形内の画素成分などにより牌山を絞り込みます．
+その後，特定した牌山の中心位置に基づきツモ牌の位置を特定します．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;tsumohai.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;ツモプレイヤーの検出&#34;&gt;ツモプレイヤーの検出&lt;/h2&gt;
+&lt;p&gt;ツモ動作をしたプレイヤーをリアルタイムで監視するため，画像中から手指検出をおこない，人差し指の位置に基づきツモ動作を検出します．
+&lt;a href=&#34;https://developers.google.com/mediapipe/solutions/vision/hand_landmarker&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;MediaPipe&lt;/a&gt;
+のハンドトラッキングを使って，前節のツモ位置と人差し指が近づいたタイミングをツモとして判定します．
+今回は処理負荷軽減のため，手指検出をツモ牌の周辺に限定して推論を行っています．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;tsumo1.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;プレイヤーの識別には，手首の座標と中指付け根の座標から成る線分の角度を求め，角度を4分割して識別しました．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;tsumo2.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;オートスイッチャー実装&#34;&gt;オートスイッチャー実装！！！&lt;/h2&gt;
+&lt;p&gt;OBSを使用して配信するため，カメラ切り替えには
+&lt;a href=&#34;https://github.com/Elektordi/obs-websocket-py/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;obs-websocket-py&lt;/a&gt;
+を使用しました．こちらの
+&lt;a href=&#34;https://github.com/Elektordi/obs-websocket-py/blob/master/samples/switch_scenes.py&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;サンプル&lt;/a&gt;
+がそのまま動作して助かりました．&lt;/p&gt;
+&lt;p&gt;GUI実装にはHTML/JSでの記述が可能な
+&lt;a href=&#34;https://github.com/python-eel/Eel&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Eel&lt;/a&gt;
+を使用しました．GUI設計ライブラリ毎の独自記法を覚える必要がないので，かなり重宝しています．&lt;/p&gt;
+&lt;p&gt;実際の動作の様子がこちら．&lt;/p&gt;
+&lt;video controls preload=&#34;auto&#34; width=&#34;100%&#34;  playsinline class=&#34;html-video&#34;&gt;
+    &lt;source src=&#34;http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/cam_switcher_test.mp4&#34; type=&#34;video/mp4&#34;&gt;
+  &lt;span&gt;Your browser doesn&#39;t support embedded videos, but don&#39;t worry, you can &lt;a href=&#34;http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/cam_switcher_test.mp4&#34;&gt;download it&lt;/a&gt; and watch it with your favorite video player!&lt;/span&gt;
+&lt;/video&gt;
+&lt;p&gt;現時点では鳴きには対応してないので，手動切替機能も実装しています．とはいえ鳴いた牌を監視すればたぶん容易に検出可能なので，追々実装したいですね．&lt;/p&gt;
+&lt;p&gt;あと，牌山をずらす行為についても実装上では判定の対象となっています．これは両手で牌山をずらした場合に例外としてカメラ切り替えを行わない設計にすればある程度は回避できる問題です．ただし，自身のツモ番に牌山をずらすのは問題ないので，とりあえず保留ですね．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>リアルタイムの映像入力に対してFPSを落とさずに画像処理したい</title>
+      <link>http://localhost:1313/blog/posts/20231226_multiprocessingforrealtimevideo/</link>
+      <pubDate>Tue, 26 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231226_multiprocessingforrealtimevideo/</guid>
+      <description>&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/2023_12_01_multiprocessingforyolov8/&#34; target=&#34;_blank&#34;&gt;複数カメラの入力に対しYOLOv8で並列推論する&lt;/a&gt;のソースコード解説です．
+解説のため，一部表現を変えている部分があります．&lt;/p&gt;
+&lt;p&gt;大まかな流れは以下の通り．&lt;/p&gt;
+&lt;ol start=&#34;0&#34;&gt;
+&lt;li&gt;共有メモリ確保&lt;/li&gt;
+&lt;li&gt;フレーム入力プロセス
+&lt;ol&gt;
+&lt;li&gt;カメラからフレームを取得&lt;/li&gt;
+&lt;li&gt;フレームを共有メモリ1に保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;推論プロセス
+&lt;ol&gt;
+&lt;li&gt;共有フレームを呼び出し&lt;/li&gt;
+&lt;li&gt;推論&lt;/li&gt;
+&lt;li&gt;推論結果を描画したフレームを共有メモリ2に保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;フレーム表示プロセス
+&lt;ol&gt;
+&lt;li&gt;共有フレームを呼び出し&lt;/li&gt;
+&lt;li&gt;フレームの画面描画&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;プロセス間の遷移はmultiprocessingモジュールのEvent関数をフラグとして利用します．
+カメラの台数が増えた場合はプロセス数を増やせば対応できます．&lt;/p&gt;
+&lt;h2 id=&#34;事前準備&#34;&gt;事前準備&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;設定情報&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cam_N &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# カメラ台数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;proccess_N &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# カメラ1台あたりのプロセス数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;frame_info &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;nbytes&amp;#34;&lt;/span&gt; : frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;nbytes,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;shape&amp;#34;&lt;/span&gt; : frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;shape,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dtype&amp;#34;&lt;/span&gt; : frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;dtype}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;フレームのサイズや型はメモリ確保，呼び出し時に必要になります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;共有メモリの確保&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;shm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; shared_memory&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;SharedMemory(create&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;, size&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;nbytes, name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_name)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;共有メモリの確保はこの一文でできます．めっちゃ便利ですね．
+ただし，mem_nameを動的に作成して複数の共有メモリを確保する場合，注意事項があります．
+shared_memory.SharedMemoryの戻り値を格納する変数（上記コードではshm）を設定しなかった場合や上書きした場合，それ以前の共有メモリ領域は参照できなくなります．その場合はshmを格納するリストを用意しておくとアクセス可能になります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロセスの立ち上げ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Process(target&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;関数名, args&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;(引数,))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;start() &lt;span style=&#34;color:#75715e&#34;&gt;# プロセス開始&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;join() &lt;span style=&#34;color:#75715e&#34;&gt;# プロセス終了&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;複数プロセスを立ち上げる場合は p をリストに入れておくと管理が楽です．&lt;/p&gt;
+&lt;h2 id=&#34;フレーム入力プロセス&#34;&gt;フレーム入力プロセス&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rec_cam&lt;/span&gt;(cam_id, pre_flags, frame_info):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        cap &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cv2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VideoCapture(cam_id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            _, frame &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            idx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (cam_id)&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;proccess_N&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;counter&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;proccess_N
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            mem_name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;shared&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;idx&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;02&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            shm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; shared_memory&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;SharedMemory(name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;mem_name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            frame_sh &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ndarray(shape&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;frame_info[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;shape&amp;#34;&lt;/span&gt;], dtype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;frame_info[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dtype&amp;#34;&lt;/span&gt;], buffer&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;shm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;buf)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            frame_sh[:] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; frame[:]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;# 推論開始&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            pre_flags[idx]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;set()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;multiprocessingのSharedMemoryでは共有メモリを名前をつけて呼び出すことができます．便利！
+ここでは，&amp;ldquo;shared1[番号]&amp;ldquo;という名前で共有メモリを確保している（後述）．カメラ台数✕カメラあたりのプロセス数分の共有メモリ領域が必要になるため，
+あるカメラのあるフレームに対する保存領域は，カメラ番号✕カメラ1台あたりのプロセス数＋フレーム番号%カメラ1台あたりのプロセス数で求めることができる．と同時にこの番号は推論プロセスを動作させるフラグ管理のインデックスとしても使う．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>映像入力の遅延をPyAVで解決してみる</title>
+      <link>http://localhost:1313/blog/posts/20231225_getframebypyav/</link>
+      <pubDate>Mon, 25 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231225_getframebypyav/</guid>
+      <description>&lt;h2 id=&#34;ビデオカメラからopencvで映像取得低品質&#34;&gt;ビデオカメラからOpenCVで映像取得（低品質）&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34;&gt;麻雀自動採譜&lt;/a&gt;の実装において，卓上を撮影する天カメとしてFull HDで映像記録が可能な家庭用ビデオカメラを取り付けた．&lt;/p&gt;
+&lt;p&gt;ビデオカメラにはHDMIの出力端子があり，HDMI to USB Cに変換できる&lt;a href=&#34;https://amzn.asia/d/jclJASJ&#34;&gt;ビデオキャプチャカード&lt;/a&gt;を導入．
+これでビデオカメラをWebカメラみたく使えるぞ！やった！！&lt;/p&gt;
+&lt;p&gt;と思った矢先，&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;なんか遅い気がする！！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;よくあるOpenCVでWebカメラの映像を取得するプログラムを走らせると，&lt;strong&gt;1秒遅延＋低FPS＋低画質&lt;/strong&gt;という散々な結果に&lt;/p&gt;
+&lt;p&gt;お前 Full HD で 30FPS 出るって言ってたじゃないか&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;キャプチャカードが悪いのか，もともとそんな高品質は無理なのか，いろいろ考えた挙げ句，似た症状を以前どっかで見たのを思い出しました．&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/2023_12_01_getframertsp/&#34;&gt;RTSP通信でカメラの映像を受信してみる&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;このときもRTSP通信による映像入力がOpenCVでは遅延＆低FPSだった．
+今回も&lt;a href=&#34;https://pyav.org/docs/develop/index.html&#34; target=&#34;_blank&#34;&gt;PyAV&lt;/a&gt;を使えば解決するかもしれない．&lt;/p&gt;
+&lt;h2 id=&#34;ビデオカメラからpyavで映像取得&#34;&gt;ビデオカメラからPyAVで映像取得&lt;/h2&gt;
+&lt;p&gt;PyAVでPCに有線接続されたカメラから映像を取得する．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; cv2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; av
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;con_options  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  dict(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    video_size&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;1920x1080&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    vcodec&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mjpeg&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    framerate&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;30&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rtbufsize&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;device_name  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USB Video&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;con_def  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  dict(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;dshow&amp;#39;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;video=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;device_name&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    options&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;dict(con_options, video_device_number&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;) )
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;container &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; av&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;open(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;con_def)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; frame &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode(video&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    frame &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; frame&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;to_ndarray(format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bgr24&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# cv2.imshow(&amp;#34;test_window&amp;#34;, frame)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# cv2.waitKey(1)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ちなみにカメラデバイス名はffmpegをインストールしてるなら以下のコマンドで確認できる．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffmpeg -list_devices true -f dshow -i dummy
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;PyAVはFFmpegのPythonバインディングらしいので，デバイス名の自動取得も可能かもしれない．subprocessモジュールを使えば上のコマンドでも可能．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>今後の更新予定</title>
+      <link>http://localhost:1313/blog/posts/20231212_scheduled_update/</link>
+      <pubDate>Tue, 12 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231212_scheduled_update/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;multiprocessing × YOLOv8の詳細解説&lt;/li&gt;
+&lt;li&gt;Denoを利用した基本的なWebサイト作成&lt;/li&gt;
+&lt;li&gt;Deno Deploy設定&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>RTSP通信でカメラの映像を受信してみる</title>
+      <link>http://localhost:1313/blog/posts/20231201_getframertsp/</link>
+      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231201_getframertsp/</guid>
+      <description>&lt;h2 id=&#34;rtspでフレーム取得opencv&#34;&gt;RTSPでフレーム取得（OpenCV）&lt;/h2&gt;
+&lt;p&gt;RTSP通信でカメラの映像を受け取る際，OpenCVを使って記述できる．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; cv2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;rtsp://username:password@ipaddress&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Tapo C200は末尾に画質を指定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;rtsp://username:password@ipaddress/stream1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cap &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cv2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VideoCapture(url)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ret, frame &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ただこれだとTapo C200では&lt;strong&gt;1秒程度遅延&lt;/strong&gt;が発生してしまう．
+&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34;&gt;麻雀自動採譜&lt;/a&gt;
+の実装上，天井カメラを含めたカメラ間での同期が必須なんですよね．&lt;/p&gt;
+&lt;h2 id=&#34;rtspでフレーム取得pyav&#34;&gt;RTSPでフレーム取得（PyAV）&lt;/h2&gt;
+&lt;p&gt;RTSP映像の受信にはFFmpegのPythonバインディングである
+&lt;a href=&#34;https://pyav.org/docs/develop/index.html&#34; target=&#34;_blank&#34;&gt;PyAV&lt;/a&gt;
+を利用した方法もあり、以下で映像受信が可能でした．&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-python:&#34; data-lang=&#34;python:&#34;&gt;import av
+
+url = &amp;#34;rtsp://username:password@ipaddress&amp;#34;
+container = av.open(url)
+for frame in container.decode(video=0):
+    frame = frame.to_ndarray(format=&amp;#39;bgr24&amp;#39;)
+    pass
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;PyAVを利用した場合は遅延が大幅に減少した．やったね．&lt;/p&gt;
+&lt;h2 id=&#34;rtspで一定時間毎にフレーム取得pyav&#34;&gt;RTSPで一定時間毎にフレーム取得（PyAV）&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34;&gt;麻雀自動採譜&lt;/a&gt;
+牌認識に向けて，学習画像収集のためn秒おきに画像を撮影してみた．いつものOpenCVと同じ感覚で&lt;code&gt;time.sleep(n)&lt;/code&gt;を使用したところ以下のエラーが複数出現．&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-raw:&#34; data-lang=&#34;raw:&#34;&gt;max delay reached. need to consume packet
+RTP: missed 6066 packets
+RTP: PT=60: bad cseq a657 expected=8ea5
+max delay reached. need to consume packet
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;sleepで無理に処理を中断させたため接続が不安定になったのかも．
+通常の受信が安定していたことを踏まえ，とりあえず以下のコードで対応してみる．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>複数カメラの入力に対しYOLOv8で並列推論する</title>
+      <link>http://localhost:1313/blog/posts/20231201_multiprocessingforyolov8/</link>
+      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231201_multiprocessingforyolov8/</guid>
+      <description>&lt;h2 id=&#34;実装過程あれこれ１&#34;&gt;実装過程あれこれ１&lt;/h2&gt;
+&lt;p&gt;これまでの作業でmultiprocessingモジュールを利用しプレーヤーの手牌を写す4台の
+&lt;a href=&#34;https://www.tp-link.com/jp/smart-home/tapo/tapo-c200/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Tapo C200&lt;/a&gt;
+からフレームを受信することができるようになりました．
+&lt;br&gt;
+早速各カメラに割り当てたプロセス毎に適当に学習させておいた
+&lt;a href=&#34;https://docs.ultralytics.com/ja/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;YOLOv8&lt;/a&gt;
+による牌推論を実行し，結果を描画してみました．わくわく！&lt;/p&gt;
+&lt;p&gt;はい，映像出力が不穏な感じに．
+&lt;video controls preload=&#34;auto&#34; width=&#34;100%&#34;  playsinline class=&#34;html-video&#34;&gt;
+    &lt;source src=&#34;http://localhost:1313/blog/posts/20231201_multiprocessingforyolov8/before.mp4&#34; type=&#34;video/mp4&#34;&gt;
+  &lt;span&gt;Your browser doesn&#39;t support embedded videos, but don&#39;t worry, you can &lt;a href=&#34;http://localhost:1313/blog/posts/20231201_multiprocessingforyolov8/before.mp4&#34;&gt;download it&lt;/a&gt; and watch it with your favorite video player!&lt;/span&gt;
+&lt;/video&gt;&lt;/p&gt;
+&lt;p&gt;卓の四隅にカメラを配置し，中央でお洒落カバーをバッサバッサしてます．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロセス間でまったく映像出力のタイミングがあっていない&lt;/li&gt;
+&lt;li&gt;フレーム間隔がまちまち&lt;/li&gt;
+&lt;li&gt;映像の乱れが酷い&lt;/li&gt;
+&lt;li&gt;FPSが低い（Tapo入力時15→10弱）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;特に映像出力タイミングがあっていない状況だと自動採譜なんてとてもじゃないけど実現できないよね&amp;hellip;&amp;hellip;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;フレーム出力がばらつく理由を勝手に予想．こんな感じだろうか&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;multiprocess_fig1.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;出力結果を見る感じ，どうやらフレームに映り込んでいる牌が多いほど推論時間が増加してるっぽい．次のフレーム入力までに推論が追いつかず，プロセス間でフレーム出力に差が出ているように見える．
+&lt;br&gt;&lt;br&gt;
+&lt;span style=&#34;font-size: 200%; color: red;&#34;&gt;
+こんなときこそマルチプロセス処理の出番でしょ↓&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;multiprocess_fig2.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+（推論プロセスをフレームごとに分散させれば安定した出力が可能だよね）&lt;/p&gt;
+&lt;p&gt;既にカメラごとにプロセスを分割しているため，その拡張のつもりで実装に取り掛かりました．設計は以下．&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;映像受信プロセス ×4（カメラの台数）&lt;/li&gt;
+&lt;li&gt;推論処理プロセス ×n×4（任意で設定可能，カメラごとに割当）&lt;/li&gt;
+&lt;li&gt;推論結果統合プロセス ×4（カメラの台数）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;さあやるぞ！&lt;/p&gt;
+&lt;h2 id=&#34;実装過程あれこれ２&#34;&gt;実装過程あれこれ２&lt;/h2&gt;
+&lt;p&gt;ここで問題発生．フラグによるイベント発生伝達や事前に渡してある引数を処理に使うのはできそうだが，起動済みのプロセス1,2,3の間でフレームndarrayを引き渡す方法がわからない．&lt;br&gt;
+base64→内部UDPが一瞬頭を過るが無視して
+&lt;a href=&#34;https://docs.python.org/ja/3.10/library/multiprocessing.html&#34; target=&#34;_blank&#34;&gt;公式ドキュメント&lt;/a&gt;
+を漁ってみます．&lt;/p&gt;
+&lt;p&gt;ドキュメントによると，python標準モジュールmultiprocessingにはメモリ共有やプロキシ経由でのオブジェクト操作をサポートする機能が幾つかあるんだとか．
+Value, Array, Queue, Pipe, RawArray, Manager, shared_memory&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;多い．更にここ4,5年のPythonアップデートでmultiprocessingの仕様が大幅に変わっており，どれを使えばいいのか分かりづらい．&lt;/p&gt;
+&lt;p&gt;試行錯誤の後，名前で共有メモリ領域を指定するshared_memoryを利用することに．
+フラグと共有メモリ領域名を予め設定しておけば任意のタイミングで他プロセスが処理したndarrayを受け取れる．かなり便利ですね．&lt;/p&gt;
+&lt;p&gt;そんなこんなで推論のマルチプロセス処理を実装しました．映像出力がこちらになります．
+&lt;video controls preload=&#34;auto&#34; width=&#34;100%&#34;  playsinline class=&#34;html-video&#34;&gt;
+    &lt;source src=&#34;http://localhost:1313/blog/posts/20231201_multiprocessingforyolov8/after.mp4&#34; type=&#34;video/mp4&#34;&gt;
+  &lt;span&gt;Your browser doesn&#39;t support embedded videos, but don&#39;t worry, you can &lt;a href=&#34;http://localhost:1313/blog/posts/20231201_multiprocessingforyolov8/after.mp4&#34;&gt;download it&lt;/a&gt; and watch it with your favorite video player!&lt;/span&gt;
+&lt;/video&gt;&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>

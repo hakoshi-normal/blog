@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>複数カメラの入力に対しYOLOv8で並列推論する | 箱四のブログ</title>
+<meta name="keywords" content="multiprocessing, Python, YOLOv8, 麻雀自動採譜">
+<meta name="description" content="実装過程あれこれ１
+これまでの作業でmultiprocessingモジュールを利用しプレーヤーの手牌を写す4台の
+Tapo C200
+からフレームを受信することができるようになりました．
+
+早速各カメラに割り当てたプロセス毎に適当に学習させておいた
+YOLOv8
+による牌推論を実行し，結果を描画してみました．わくわく！
+はい，映像出力が不穏な感じに．
+
+    
+  Your browser doesn&#39;t support embedded videos, but don&#39;t worry, you can download it and watch it with your favorite video player!
+
+卓の四隅にカメラを配置し，中央でお洒落カバーをバッサバッサしてます．
+
+プロセス間でまったく映像出力のタイミングがあっていない
+フレーム間隔がまちまち
+映像の乱れが酷い
+FPSが低い（Tapo入力時15→10弱）
+
+特に映像出力タイミングがあっていない状況だと自動採譜なんてとてもじゃないけど実現できないよね&hellip;&hellip;
+フレーム出力がばらつく理由を勝手に予想．こんな感じだろうか
+
+     
+
+
+出力結果を見る感じ，どうやらフレームに映り込んでいる牌が多いほど推論時間が増加してるっぽい．次のフレーム入力までに推論が追いつかず，プロセス間でフレーム出力に差が出ているように見える．
+
+
+こんなときこそマルチプロセス処理の出番でしょ↓">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/blog/posts/2023_12_01_multiprocessingforyolov8/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/2023_12_01_multiprocessingforyolov8/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/blog/" accesskey="h" title="箱四のブログ (Alt + H)">
+                <img src="http://localhost:1313/blog/favicon.ico" alt="" aria-label="logo"
+                    height="30">箱四のブログ</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/blog/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/blog/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/blog/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      複数カメラの入力に対しYOLOv8で並列推論する
+    </h1>
+    <div class="post-meta"><span title='2023-12-01 00:00:00 +0000 UTC'>December 1, 2023</span>&nbsp;·&nbsp;3 min
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="実装過程あれこれ１">実装過程あれこれ１<a hidden class="anchor" aria-hidden="true" href="#実装過程あれこれ１">#</a></h2>
+<p>これまでの作業でmultiprocessingモジュールを利用しプレーヤーの手牌を写す4台の
+<!-- raw HTML omitted -->Tapo C200<!-- raw HTML omitted -->
+からフレームを受信することができるようになりました．
+<!-- raw HTML omitted -->
+早速各カメラに割り当てたプロセス毎に適当に学習させておいた
+<!-- raw HTML omitted -->YOLOv8<!-- raw HTML omitted -->
+による牌推論を実行し，結果を描画してみました．わくわく！</p>
+<p>はい，映像出力が不穏な感じに．
+<video controls preload="auto" width="100%"  playsinline class="html-video">
+    <source src="/blog/posts/2023_12_01_multiprocessingforyolov8/before.mp4" type="video/mp4">
+  <span>Your browser doesn't support embedded videos, but don't worry, you can <a href="/blog/posts/2023_12_01_multiprocessingforyolov8/before.mp4">download it</a> and watch it with your favorite video player!</span>
+</video></p>
+<p>卓の四隅にカメラを配置し，中央でお洒落カバーをバッサバッサしてます．</p>
+<ul>
+<li>プロセス間でまったく映像出力のタイミングがあっていない</li>
+<li>フレーム間隔がまちまち</li>
+<li>映像の乱れが酷い</li>
+<li>FPSが低い（Tapo入力時15→10弱）</li>
+</ul>
+<p>特に映像出力タイミングがあっていない状況だと自動採譜なんてとてもじゃないけど実現できないよね&hellip;&hellip;<!-- raw HTML omitted --></p>
+<p>フレーム出力がばらつく理由を勝手に予想．こんな感じだろうか</p>
+<figure>
+    <img loading="lazy" src="multiprocess_fig1.jpg"/> 
+</figure>
+
+<p>出力結果を見る感じ，どうやらフレームに映り込んでいる牌が多いほど推論時間が増加してるっぽい．次のフレーム入力までに推論が追いつかず，プロセス間でフレーム出力に差が出ているように見える．
+<!-- raw HTML omitted --><br>
+<!-- raw HTML omitted -->
+こんなときこそマルチプロセス処理の出番でしょ↓<!-- raw HTML omitted --></p>
+<p><figure>
+    <img loading="lazy" src="multiprocess_fig2.jpg"/> 
+</figure>
+
+（推論プロセスをフレームごとに分散させれば安定した出力が可能だよね）</p>
+<p>既にカメラごとにプロセスを分割しているため，その拡張のつもりで実装に取り掛かりました．設計は以下．</p>
+<ol>
+<li>映像受信プロセス ×4（カメラの台数）</li>
+<li>推論処理プロセス ×n×4（任意で設定可能，カメラごとに割当）</li>
+<li>推論結果統合プロセス ×4（カメラの台数）</li>
+</ol>
+<p>さあやるぞ！</p>
+<h2 id="実装過程あれこれ２">実装過程あれこれ２<a hidden class="anchor" aria-hidden="true" href="#実装過程あれこれ２">#</a></h2>
+<p>ここで問題発生．フラグによるイベント発生伝達や事前に渡してある引数を処理に使うのはできそうだが，起動済みのプロセス1,2,3の間でフレームndarrayを引き渡す方法がわからない．<!-- raw HTML omitted -->
+base64→内部UDPが一瞬頭を過るが無視して
+<!-- raw HTML omitted -->公式ドキュメント<!-- raw HTML omitted -->
+を漁ってみます．</p>
+<p>ドキュメントによると，python標準モジュールmultiprocessingにはメモリ共有やプロキシ経由でのオブジェクト操作をサポートする機能が幾つかあるんだとか．
+Value, Array, Queue, Pipe, RawArray, Manager, shared_memory&hellip;&hellip;</p>
+<p>多い．更にここ4,5年のPythonアップデートでmultiprocessingの仕様が大幅に変わっており，どれを使えばいいのか分かりづらい．</p>
+<p>試行錯誤の後，名前で共有メモリ領域を指定するshared_memoryを利用することに．
+フラグと共有メモリ領域名を予め設定しておけば任意のタイミングで他プロセスが処理したndarrayを受け取れる．かなり便利ですね．</p>
+<p>そんなこんなで推論のマルチプロセス処理を実装しました．映像出力がこちらになります．
+<video controls preload="auto" width="100%"  playsinline class="html-video">
+    <source src="/blog/posts/2023_12_01_multiprocessingforyolov8/after.mp4" type="video/mp4">
+  <span>Your browser doesn't support embedded videos, but don't worry, you can <a href="/blog/posts/2023_12_01_multiprocessingforyolov8/after.mp4">download it</a> and watch it with your favorite video player!</span>
+</video></p>
+<p>概ね同じタイミングでフレームが描画されているように見えますね．<!-- raw HTML omitted -->
+FPSはいずれのカメラも15程度であり，入力時のFPSを保持したままリアルタイムで推論が実行できました．
+<!-- raw HTML omitted --><br>
+ちなみに，</p>
+<ul>
+<li>multiprocessingではなくthreadingを使ってYOLOv8のモデルをスレッド間で共有する方法があるが，提供元である
+<!-- raw HTML omitted -->UltralyticsのMedium記事<!-- raw HTML omitted -->
+では推奨方法，
+<!-- raw HTML omitted -->公式ドキュメント<!-- raw HTML omitted -->
+では非推奨方法として紹介されていたため今回は見送り．</li>
+<li>試験的に使用してるYOLOv8モデルは，現環境（GeForce RTX 3070）で学習可能な最大サイズのモデル（YOLOv8l）に対して複数の公開データセットを統合した5万枚強の牌画像を学習させたものである．統合作業時にデータセット間でラベルのズレが発生したため，検出結果に誤りがある．ラベルが混合した状態のデータセットではあるが安定した検出ができているため，データセットの整理によって更に高精度な検出の実現が期待できる．</li>
+<li>背景部分の予期せぬ牌検出は信頼度で棄却できるため問題なし．</li>
+<li>検証動画は双方画面録画の仕様上FPSが低下している．</li>
+</ul>
+<h2 id="ソースコード">ソースコード<a hidden class="anchor" aria-hidden="true" href="#ソースコード">#</a></h2>
+<p>複数台のカメラのフレーム入力に対してYOLOv8による推論を並列実行するPythonプログラム
+ソースコード解説は<!-- raw HTML omitted -->こちら<!-- raw HTML omitted -->からどうぞ．</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> msvcrt
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> multiprocessing <span style="color:#f92672">import</span> Process, Event, shared_memory
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> av
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> cv2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> ultralytics <span style="color:#f92672">import</span> YOLO
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># RTSPカメラ設定情報</span>
+</span></span><span style="display:flex;"><span>info_list <span style="color:#f92672">=</span> [[<span style="color:#e6db74">&#34;toncamera&#34;</span>, <span style="color:#e6db74">&#34;*&#34;</span>],
+</span></span><span style="display:flex;"><span>            [<span style="color:#e6db74">&#34;nancamera&#34;</span>, <span style="color:#e6db74">&#34;*&#34;</span>],
+</span></span><span style="display:flex;"><span>            [<span style="color:#e6db74">&#34;shacamera&#34;</span>, <span style="color:#e6db74">&#34;*&#34;</span>],
+</span></span><span style="display:flex;"><span>            [<span style="color:#e6db74">&#34;peicamera&#34;</span>, <span style="color:#e6db74">&#34;*&#34;</span>]]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;*&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1:1280x720, 2:640x360</span>
+</span></span><span style="display:flex;"><span>mode <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 推論プロセス数指定</span>
+</span></span><span style="display:flex;"><span>N <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rec_cam</span>(cam_id, username, ipaddress, pre_flags, stop_flag, frame_info):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;rtsp://</span><span style="color:#e6db74">{</span>username<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">{</span>password<span style="color:#e6db74">}</span><span style="color:#e6db74">@</span><span style="color:#e6db74">{</span>ipaddress<span style="color:#e6db74">}</span><span style="color:#e6db74">:554/stream</span><span style="color:#e6db74">{</span>mode<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    container <span style="color:#f92672">=</span> av<span style="color:#f92672">.</span>open(url)
+</span></span><span style="display:flex;"><span>    counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    start <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> frame <span style="color:#f92672">in</span> container<span style="color:#f92672">.</span>decode(video<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>        counter<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        frame <span style="color:#f92672">=</span> frame<span style="color:#f92672">.</span>to_ndarray(format<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;bgr24&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 共有メモリにフレームを書き込み</span>
+</span></span><span style="display:flex;"><span>        idx <span style="color:#f92672">=</span> (cam_id)<span style="color:#f92672">*</span>N<span style="color:#f92672">+</span>counter<span style="color:#f92672">%</span>N
+</span></span><span style="display:flex;"><span>        mem_name <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;shared</span><span style="color:#e6db74">{</span>idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">:</span><span style="color:#e6db74">02</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>        shm <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(name<span style="color:#f92672">=</span>mem_name)
+</span></span><span style="display:flex;"><span>        frame_sh <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ndarray(shape<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;shape&#34;</span>], dtype<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;dtype&#34;</span>], buffer<span style="color:#f92672">=</span>shm<span style="color:#f92672">.</span>buf)
+</span></span><span style="display:flex;"><span>        frame_sh[:] <span style="color:#f92672">=</span> frame[:]
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 推論開始</span>
+</span></span><span style="display:flex;"><span>        pre_flags[idx]<span style="color:#f92672">.</span>set()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> stop_flag<span style="color:#f92672">.</span>is_set():
+</span></span><span style="display:flex;"><span>            t <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> start
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>username<span style="color:#e6db74">}</span><span style="color:#e6db74">, TIME:</span><span style="color:#e6db74">{</span>round(t, <span style="color:#ae81ff">3</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">, FRAME:</span><span style="color:#e6db74">{</span>counter<span style="color:#e6db74">}</span><span style="color:#e6db74">, FPS:</span><span style="color:#e6db74">{</span>round(counter<span style="color:#f92672">/</span>t, <span style="color:#ae81ff">3</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    container<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>    cv2<span style="color:#f92672">.</span>destroyAllWindows()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">finish_monitor</span>(stop_flag):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> msvcrt<span style="color:#f92672">.</span>kbhit() <span style="color:#f92672">and</span> msvcrt<span style="color:#f92672">.</span>getch() <span style="color:#f92672">==</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;q&#39;</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;Finished&#34;</span>)
+</span></span><span style="display:flex;"><span>            stop_flag<span style="color:#f92672">.</span>set()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">predict_frame</span>(pre_flag, pre_fin_flag, mem_name, stop_flag, username, frame_info):
+</span></span><span style="display:flex;"><span>    model <span style="color:#f92672">=</span> YOLO(<span style="color:#e6db74">&#39;best.pt&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> pre_flag<span style="color:#f92672">.</span>is_set(): <span style="color:#75715e"># 推論</span>
+</span></span><span style="display:flex;"><span>            pre_flag<span style="color:#f92672">.</span>clear()
+</span></span><span style="display:flex;"><span>            shm <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(name<span style="color:#f92672">=</span>mem_name)
+</span></span><span style="display:flex;"><span>            frame <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ndarray(shape<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;shape&#34;</span>], dtype<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;dtype&#34;</span>], buffer<span style="color:#f92672">=</span>shm<span style="color:#f92672">.</span>buf)
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># YOLOv8による推論実行</span>
+</span></span><span style="display:flex;"><span>            result <span style="color:#f92672">=</span> model(frame)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>            frame <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span>plot()
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 結果統合用共有メモリにのせる</span>
+</span></span><span style="display:flex;"><span>            shm_result <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(name<span style="color:#f92672">=</span>username)
+</span></span><span style="display:flex;"><span>            frame_new <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ndarray(shape<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;shape&#34;</span>], dtype<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;dtype&#34;</span>], buffer<span style="color:#f92672">=</span>shm_result<span style="color:#f92672">.</span>buf)
+</span></span><span style="display:flex;"><span>            frame_new[:]<span style="color:#f92672">=</span>frame[:]
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 結果統合用</span>
+</span></span><span style="display:flex;"><span>            pre_fin_flag<span style="color:#f92672">.</span>set()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> stop_flag<span style="color:#f92672">.</span>is_set():
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">view_frame</span>(pre_fin_flag, username, stop_flag, frame_info):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> pre_fin_flag<span style="color:#f92672">.</span>is_set():
+</span></span><span style="display:flex;"><span>            pre_fin_flag<span style="color:#f92672">.</span>clear()
+</span></span><span style="display:flex;"><span>            shm <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(name<span style="color:#f92672">=</span>username)
+</span></span><span style="display:flex;"><span>            frame <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ndarray(shape<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;shape&#34;</span>], dtype<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;dtype&#34;</span>], buffer<span style="color:#f92672">=</span>shm<span style="color:#f92672">.</span>buf)
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Full-HDだと大抵画面が埋まっちゃう</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># frame = cv2.resize(frame, None, None, 0.6, 0.6)</span>
+</span></span><span style="display:flex;"><span>            cv2<span style="color:#f92672">.</span>imshow(username, frame)
+</span></span><span style="display:flex;"><span>            cv2<span style="color:#f92672">.</span>waitKey(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> stop_flag<span style="color:#f92672">.</span>is_set():
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># メモリ確保情報</span>
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;rtsp://</span><span style="color:#e6db74">{</span>info_list[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">{</span>password<span style="color:#e6db74">}</span><span style="color:#e6db74">@</span><span style="color:#e6db74">{</span>info_list[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">1</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">:554/stream</span><span style="color:#e6db74">{</span>mode<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    container <span style="color:#f92672">=</span> av<span style="color:#f92672">.</span>open(url)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, frame <span style="color:#f92672">in</span> enumerate(container<span style="color:#f92672">.</span>decode(video<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)):
+</span></span><span style="display:flex;"><span>        frame <span style="color:#f92672">=</span> frame<span style="color:#f92672">.</span>to_ndarray(format<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;bgr24&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> frame <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    container<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>    frame_info <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;nbytes&#34;</span> : frame<span style="color:#f92672">.</span>nbytes,
+</span></span><span style="display:flex;"><span>                  <span style="color:#e6db74">&#34;shape&#34;</span> : frame<span style="color:#f92672">.</span>shape,
+</span></span><span style="display:flex;"><span>                  <span style="color:#e6db74">&#34;dtype&#34;</span> : frame<span style="color:#f92672">.</span>dtype}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 停止プロセス</span>
+</span></span><span style="display:flex;"><span>    stop_flag <span style="color:#f92672">=</span> Event()
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> Process(target<span style="color:#f92672">=</span>finish_monitor, args<span style="color:#f92672">=</span>(stop_flag,))
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 表示プロセス群（カメラ台数分）</span>
+</span></span><span style="display:flex;"><span>    view_processes <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    pre_fin_flags <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    mem_space <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>):
+</span></span><span style="display:flex;"><span>        pre_fin_flag <span style="color:#f92672">=</span> Event()
+</span></span><span style="display:flex;"><span>        pre_fin_flags<span style="color:#f92672">.</span>append(pre_fin_flag)
+</span></span><span style="display:flex;"><span>        username <span style="color:#f92672">=</span> info_list[i][<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># メモリ確保 今回は画像用</span>
+</span></span><span style="display:flex;"><span>        shm <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(create<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, size<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;nbytes&#34;</span>], name <span style="color:#f92672">=</span> username)
+</span></span><span style="display:flex;"><span>        mem_space<span style="color:#f92672">.</span>append(shm)
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> Process(target<span style="color:#f92672">=</span>view_frame, args<span style="color:#f92672">=</span>(pre_fin_flag, username, stop_flag, frame_info))
+</span></span><span style="display:flex;"><span>        view_processes<span style="color:#f92672">.</span>append(p)
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 推論プロセス群（カメラ台数×推論プロセス数）</span>
+</span></span><span style="display:flex;"><span>    pre_processes <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    pre_flags <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    mem_names <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(N<span style="color:#f92672">*</span>len(info_list)):
+</span></span><span style="display:flex;"><span>        pre_flag <span style="color:#f92672">=</span> Event()
+</span></span><span style="display:flex;"><span>        pre_flags<span style="color:#f92672">.</span>append(pre_flag)
+</span></span><span style="display:flex;"><span>        mem_name <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;shared</span><span style="color:#e6db74">{</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">:</span><span style="color:#e6db74">02</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>        mem_names<span style="color:#f92672">.</span>append(mem_name)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># メモリ確保</span>
+</span></span><span style="display:flex;"><span>        shm <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(create<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, size<span style="color:#f92672">=</span>frame_info[<span style="color:#e6db74">&#34;nbytes&#34;</span>], name <span style="color:#f92672">=</span> mem_name)
+</span></span><span style="display:flex;"><span>        mem_space<span style="color:#f92672">.</span>append(shm)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># frame_sh = np.ndarray(shape=frame_shape, dtype=frame_dtype, buffer=shm.buf)</span>
+</span></span><span style="display:flex;"><span>        username <span style="color:#f92672">=</span> info_list[i<span style="color:#f92672">//</span>N][<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        pre_fin_flag <span style="color:#f92672">=</span> pre_fin_flags[i<span style="color:#f92672">//</span>N]
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> Process(target<span style="color:#f92672">=</span>predict_frame, args<span style="color:#f92672">=</span>(pre_flag, pre_fin_flag, mem_name, stop_flag, username, frame_info))
+</span></span><span style="display:flex;"><span>        pre_processes<span style="color:#f92672">.</span>append(p)
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 撮影プロセス群（カメラ台数）</span>
+</span></span><span style="display:flex;"><span>    rec_processes <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> cam_id, info <span style="color:#f92672">in</span> enumerate(info_list):
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> Process(target<span style="color:#f92672">=</span>rec_cam, args<span style="color:#f92672">=</span>(cam_id, info[<span style="color:#ae81ff">0</span>], info[<span style="color:#ae81ff">1</span>], pre_flags, stop_flag, frame_info,))
+</span></span><span style="display:flex;"><span>        rec_processes<span style="color:#f92672">.</span>append(p)
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>join()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> view_processes:
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>join()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pre_processes:
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>join()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> rec_processes:
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>join()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 共有メモリのリソース開放、削除</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> mem_name <span style="color:#f92672">in</span> mem_names <span style="color:#f92672">+</span> [info[<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">for</span> info <span style="color:#f92672">in</span> info_list[:<span style="color:#ae81ff">4</span>]]:
+</span></span><span style="display:flex;"><span>        shm <span style="color:#f92672">=</span> shared_memory<span style="color:#f92672">.</span>SharedMemory(name <span style="color:#f92672">=</span> mem_name)
+</span></span><span style="display:flex;"><span>        shm<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>        shm<span style="color:#f92672">.</span>unlink()
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/blog/tags/multiprocessing/">Multiprocessing</a></li>
+      <li><a href="http://localhost:1313/blog/tags/python/">Python</a></li>
+      <li><a href="http://localhost:1313/blog/tags/yolov8/">YOLOv8</a></li>
+      <li><a href="http://localhost:1313/blog/tags/%E9%BA%BB%E9%9B%80%E8%87%AA%E5%8B%95%E6%8E%A1%E8%AD%9C/">麻雀自動採譜</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/blog/">箱四のブログ</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>【入門】YOLOアノテーションと学習 | 箱四のブログ</title>
+<meta name="keywords" content="YOLO，アノテーション, labelme">
+<meta name="description" content="アノテーションとは？
+機械学習の分類のひとつである教師あり学習では，まず入力データと出力データの組を複数用意し，それらを使って機械学習モデルを訓練します．
+入力データと出力データの組は，タスクによって様々です．例えば，
+
+入力：画像データ，出力：それぞれが犬or猫
+入力：家の情報（間取り，立地，築年数など），出力：家の価格
+入力：これまでの気温，出力：明日の気温
+入力：画像データ，出力：各物体の座標
+
+どんなタスクを前提とする場合でも，これら入力データと出力データの組を作る作業が必要となります．これがアノテーションです．
+環境構築
+今回はYOLOによる画像物体認識を目標とします．そこで，アノテーションで作るべきデータは以下になります．
+
+入力：画像データ，出力：各物体の座標
+
+頑張れば用意した画像の座標を数えてアノテーションできそうですが，今回はより簡単に作業を進めるためにLabelmeというツールを使います．GUIが整備されたソフトウェアですが，Pythonライブラリとして無償で提供されています！（ありがたい！！）
+
+Anaconda Promptを開く
+conda create -n annot_env python=3.12で仮想環境を作成
+conda activate annot_envで仮想環境を有効化
+pip install --upgrade labelmeと入力しLabelmeをインストール
+
+これでインストールは完了です．そのままannot_env環境内でlabelmeコマンドを実行してみてください！
+
+     
+
+
+この画面が表示されたら成功です！
+いざ，アノテーション
+画像読み込み
+今回は画像から麻雀牌を物体認識するタスクに挑戦してみます！サンプル画像は以下からダウンロード，解凍してください．
+
+サンプル画像
+
+Zipファイルの解凍が済んだらLabelmeの画面左側にあるOpen Dirから，画像のディレクトリを開いてください．
+
+     
+
+
+これでアノテーションの準備は完了です！
+範囲選択，ラベル付け
+アノテーションの流れは以下になります．
+
+画像を右クリック，Create Rectangleをクリック
+物体の範囲を四角形で囲んで選択，間違えたらEscキーで戻る
+出てきたポップアップの上部Enter object labelにラベルを入力してOKをクリック
+2と3を物体の数だけひたすら繰り返す
+画像内のアノテーションが終わったら画面左部Saveから画像と同名のJSONファイルを保存
+
+ちょっとやってみますね～
+
+     
+
+
+はい，できました．ラベルは牌の種類（萬子筒子索子字牌）の略称です．
+&hellip;&hellip;
+&hellip;&hellip;&hellip;&hellip;
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+めんどくさい
+機械学習では一般的にデータの数が大きいほど性能が上がりやすいとされています．つまり，（要件の要求レベルにもよりますが）精度を上げるためにはたくさんアノテーションする必要があるんです．
+そこで，特定のタスクの機械学習を考える場合はアノテーションに取り掛かる前に，データセットが利用可能なライセンスで公開されていないかどうか調べるところからスタートします．例えばYOLOの場合，Roboflow，VisualData，Google Open Images Datasetなどが画像データセットを公開している他，タスクに応じて論文と併せて公開されているデータセットも多数あります．
+また今回はアノテーション入門ということで手作業での方法を紹介していますが，画像認識AIによる半自動ツールもあるので興味があれば調べてみてください．
+今回は，なんと，特別に，アノテーション済みファイルを用意してあります！
+
+アノテーション結果（JSON）
+
+ZIPファイルをダウンロード＆解凍したら，datasetsという名前のディレクトリを作成し，先程の画像ファイルとJSONファイルを以下の構造で配置してください．（image_1.jsonは自作のファイルで構いません！）
+.
+└── datasets/
+    ├── image_1.jpg
+    ├── image_1.json
+    ├── image_2.jpg
+    ├── image_2.json
+    ├── 〜省略〜
+    ├── image_10.jpg
+    └── image_10.json
+データセットフォーマットの変換
+では，学習させるデータの中身を一度見てみましょう！image_1.jsonを開いてみます．">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/blog/posts/20250506_yoloannotation---%E3%82%B3%E3%83%94%E3%83%BC/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/20250506_yoloannotation---%E3%82%B3%E3%83%94%E3%83%BC/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/blog/" accesskey="h" title="箱四のブログ (Alt + H)">
+                <img src="http://localhost:1313/blog/favicon.ico" alt="" aria-label="logo"
+                    height="30">箱四のブログ</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/blog/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/blog/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/blog/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/blog/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      【入門】YOLOアノテーションと学習
+    </h1>
+    <div class="post-meta"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="アノテーションとは">アノテーションとは？<a hidden class="anchor" aria-hidden="true" href="#アノテーションとは">#</a></h2>
+<p>機械学習の分類のひとつである<strong>教師あり学習</strong>では，まず入力データと出力データの組を複数用意し，それらを使って機械学習モデルを訓練します．</p>
+<p>入力データと出力データの組は，タスクによって様々です．例えば，</p>
+<ul>
+<li>入力：画像データ，出力：それぞれが犬or猫</li>
+<li>入力：家の情報（間取り，立地，築年数など），出力：家の価格</li>
+<li>入力：これまでの気温，出力：明日の気温</li>
+<li>入力：画像データ，出力：各物体の座標</li>
+</ul>
+<p>どんなタスクを前提とする場合でも，これら<strong>入力データと出力データの組を作る作業</strong>が必要となります．これが<strong>アノテーション</strong>です．</p>
+<h2 id="環境構築">環境構築<a hidden class="anchor" aria-hidden="true" href="#環境構築">#</a></h2>
+<p>今回はYOLOによる画像物体認識を目標とします．そこで，アノテーションで作るべきデータは以下になります．</p>
+<ul>
+<li>入力：画像データ，出力：各物体の座標</li>
+</ul>
+<p>頑張れば用意した画像の座標を数えてアノテーションできそうですが，今回はより簡単に作業を進めるために<strong>Labelme</strong>というツールを使います．GUIが整備されたソフトウェアですが，Pythonライブラリとして無償で提供されています！（ありがたい！！）</p>
+<ol>
+<li>Anaconda Promptを開く</li>
+<li><code>conda create -n annot_env python=3.12</code>で仮想環境を作成</li>
+<li><code>conda activate annot_env</code>で仮想環境を有効化</li>
+<li><code>pip install --upgrade labelme</code>と入力しLabelmeをインストール</li>
+</ol>
+<p>これでインストールは完了です．そのまま<code>annot_env</code>環境内で<code>labelme</code>コマンドを実行してみてください！</p>
+<figure class="center">
+    <img loading="lazy" src="labelme.png"/> 
+</figure>
+
+<p>この画面が表示されたら成功です！</p>
+<h2 id="いざアノテーション">いざ，アノテーション<a hidden class="anchor" aria-hidden="true" href="#いざアノテーション">#</a></h2>
+<h3 id="画像読み込み">画像読み込み<a hidden class="anchor" aria-hidden="true" href="#画像読み込み">#</a></h3>
+<p>今回は画像から麻雀牌を物体認識するタスクに挑戦してみます！サンプル画像は以下からダウンロード，解凍してください．</p>
+<ul>
+<li><a href="https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/images.zip">サンプル画像</a></li>
+</ul>
+<p>Zipファイルの解凍が済んだらLabelmeの画面左側にある<code>Open Dir</code>から，画像のディレクトリを開いてください．</p>
+<figure class="center">
+    <img loading="lazy" src="labelme_start.png"/> 
+</figure>
+
+<p>これでアノテーションの準備は完了です！</p>
+<h3 id="範囲選択ラベル付け">範囲選択，ラベル付け<a hidden class="anchor" aria-hidden="true" href="#範囲選択ラベル付け">#</a></h3>
+<p>アノテーションの流れは以下になります．</p>
+<ol>
+<li>画像を右クリック，<code>Create Rectangle</code>をクリック</li>
+<li>物体の範囲を四角形で囲んで選択，間違えたら<code>Esc</code>キーで戻る</li>
+<li>出てきたポップアップの上部<code>Enter object label</code>にラベルを入力して<code>OK</code>をクリック</li>
+<li>2と3を物体の数だけひたすら繰り返す</li>
+<li>画像内のアノテーションが終わったら画面左部<code>Save</code>から画像と同名のJSONファイルを保存</li>
+</ol>
+<p>ちょっとやってみますね～</p>
+<figure class="center">
+    <img loading="lazy" src="annotated.png"/> 
+</figure>
+
+<p>はい，できました．ラベルは牌の種類（萬子筒子索子字牌）の略称です．</p>
+<p>&hellip;&hellip;</p>
+<p>&hellip;&hellip;&hellip;&hellip;</p>
+<p>&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;</p>
+<p><span style="font-size: 150%; color: red;">めんどくさい</span></p>
+<p>機械学習では一般的にデータの数が大きいほど性能が上がりやすいとされています．つまり，（要件の要求レベルにもよりますが）精度を上げるためにはたくさんアノテーションする必要があるんです．</p>
+<p>そこで，特定のタスクの機械学習を考える場合はアノテーションに取り掛かる前に，データセットが利用可能なライセンスで公開されていないかどうか調べるところからスタートします．例えばYOLOの場合，<a href="https://universe.roboflow.com/">Roboflow</a>，<a href="https://visualdata.io/discovery">VisualData</a>，<a href="https://storage.googleapis.com/openimages/web/index.html">Google Open Images Dataset</a>などが画像データセットを公開している他，タスクに応じて論文と併せて公開されているデータセットも多数あります．</p>
+<p>また今回はアノテーション入門ということで手作業での方法を紹介していますが，画像認識AIによる半自動ツールもあるので興味があれば調べてみてください．</p>
+<p><strong>今回は，なんと，特別に，アノテーション済みファイルを用意してあります！</strong></p>
+<ul>
+<li><a href="https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/labels.zip">アノテーション結果（JSON）</a></li>
+</ul>
+<p>ZIPファイルをダウンロード＆解凍したら，<code>datasets</code>という名前のディレクトリを作成し，先程の画像ファイルとJSONファイルを以下の構造で配置してください．（<code>image_1.json</code>は自作のファイルで構いません！）</p>
+<pre tabindex="0"><code class="language-planetext" data-lang="planetext">.
+└── datasets/
+    ├── image_1.jpg
+    ├── image_1.json
+    ├── image_2.jpg
+    ├── image_2.json
+    ├── 〜省略〜
+    ├── image_10.jpg
+    └── image_10.json
+</code></pre><h3 id="データセットフォーマットの変換">データセットフォーマットの変換<a hidden class="anchor" aria-hidden="true" href="#データセットフォーマットの変換">#</a></h3>
+<p>では，学習させるデータの中身を一度見てみましょう！<code>image_1.json</code>を開いてみます．</p>
+<figure class="center">
+    <img loading="lazy" src="label_1.png"/> 
+</figure>
+
+<p>JSONはデータ記述形式のひとつで，キーと値を並べて書くのが特徴です．Pythonの辞書型そっくりですね．
+ラベルや座標がファイルの中に複数記述されていることがわかります．</p>
+<figure class="center">
+    <img loading="lazy" src="label_2.png"/> 
+</figure>
+
+<p>少しスクロールすると，よくわからない文字列が大量に記述されています．実はこれ，Base64と呼ばれるエンコード形式で画像そのものが書きつけられているんです．これにより，このJSONファイル単体で入力データを表現することが出来ます．</p>
+<p>さて，ひととおり学習データの中身を見てもらいましたが，実はこのままではYOLOの学習が出来ないんです．</p>
+<p>YOLOに学習させるためには，画像のアノテーションを以下の形式で記述する必要があります．</p>
+<p><code>画像ファイル名.txt</code></p>
+<pre tabindex="0"><code class="language-planetext" data-lang="planetext">label_id X Y Width Height
+</code></pre><p>例えば，<code>image_1.json</code>をこの形式で記述すると以下のようになります．</p>
+<p><code>image_1.txt</code></p>
+<pre tabindex="0"><code class="language-planetext" data-lang="planetext">4 0.171569 0.375817 0.142157 0.183007
+6 0.286765 0.382353 0.124183 0.183007
+0 0.401144 0.398693 0.127451 0.185185
+5 0.517157 0.408497 0.117647 0.178649
+10 0.638889 0.418301 0.125817 0.189542
+7 0.767157 0.436819 0.127451 0.174292
+</code></pre><p>YOLOのデータセットでは，ラベルの番号，X座標，Y座標，幅，高さを列挙して記述します．</p>
+<p>これを手作業で変換するのはかなり面倒です．</p>
+<p>そこで今回は，Labelmeで保存したJSONファイルをYOLOのデータセット形式に変換するツール，<strong>labelme2yolo</strong>を使います．condaの<code>annot_env</code>環境下で以下の手順で変換します．</p>
+<ol>
+<li><code>pip install labelme2yolo</code>でlabelme2yoloをインストール</li>
+<li><code>dataset</code>ディレクトリの一つ上の階層で以下のコマンドを実行
+<code>labelme2yolo --json_dir ./datasets/ --val_size 0.10 --output_format &quot;bbox&quot;</code></li>
+</ol>
+<p>これが済んだら，<code>datasets</code>ディレクトリの中に<code>YOLODataset</code>が生成されているはずです．構造は以下のようになっています．</p>
+<pre tabindex="0"><code class="language-planetext" data-lang="planetext">.
+└── YOLODatasets/
+    ├── images/
+    │   ├── train/
+    │   │   ├── image_1.jpg
+    │   │   └── ～省略～
+    │   └── val/
+    │       └── image_7.jpg
+    ├── labels/
+    │   ├── train/
+    │   │   ├── image_1.txt
+    │   │   └── ～省略～
+    │   └── val/
+    │       └── image_7.txt
+    └── dataset.yaml
+</code></pre><p>先ほどのデータセット構造より複雑になっていますね．画像とラベルが別のフォルダに格納され，更にその中で訓練用(<code>train</code>)と評価用(<code>val</code>)に分かれています．</p>
+<p><code>labels</code>ディレクトリのテキストファイルを見てみましょう．YOLOのフォーマットに変換され，ラベルIDや座標が記録されているはずです．</p>
+<p><code>dataset.yaml</code>の中身を見てみましょう．</p>
+<figure class="center">
+    <img loading="lazy" src="datasetsetting.png"/> 
+</figure>
+
+<p>データセットまでの絶対パス，訓練評価用ディレクトリのパス，ラベルIDとラベル名の対応が記載されています．YOLOの学習時にはこの<code>dataset.yaml</code>を利用してデータセットを読み込みます．</p>
+<h2 id="yoloの学習">YOLOの学習<a hidden class="anchor" aria-hidden="true" href="#yoloの学習">#</a></h2>
+<p>それでは，いよいよ作ったデータセットを使ってYOLOの学習をしてみましょう！！</p>
+<p>まず，テスト用の画像を用意します．以下のリンクから画像ファイル<code>image_11.jpg</code>をダウンロードして<code>dataset.yaml</code>と同階層に配置します．</p>
+<ul>
+<li><a href="https://github.com/hakoshi-normal/yolo_sample/raw/refs/heads/main/images/image_11.jpg">テスト画像image_11.jpg</a></li>
+</ul>
+<p><code>dataset.yaml</code>と同階層に<code>.ipynb</code>ファイルを作成して，以下のPythonプログラムを実行してみましょう．</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> ultralytics <span style="color:#f92672">import</span> YOLO
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>model <span style="color:#f92672">=</span> YOLO(<span style="color:#e6db74">&#34;yolo11n.pt&#34;</span>)
+</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>train(data<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;dataset.yaml&#39;</span>, epochs<span style="color:#f92672">=</span><span style="color:#ae81ff">300</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>results <span style="color:#f92672">=</span> model(<span style="color:#e6db74">&#34;image_11.jpg&#34;</span>)
+</span></span><span style="display:flex;"><span>results[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div><p>CPUのみの実行環境ではかなり時間がかかるので気長に待ちましょう～</p>
+<p>学習が終了すると，<code>image_11.jpg</code>に対する推論結果が表示されます．</p>
+<figure class="center">
+    <img loading="lazy" src="detectresult.png"/> 
+</figure>
+
+<p>未検出や誤検出がちらほらありますが，部分的に検出が成功していることがわかります．データセットサイズやエポック数を変えることで性能の改善が期待できます．</p>
+<p>また，データセットディレクトリの<code>runs</code>内を見ると，<code>weight</code>ディレクトリに<code>best.pt</code>が保存されていることがわかります．
+これは今回学習したモデルファイルで，実際に物体検出をシステム開発に組み込むときに使用します．</p>
+<figure class="center">
+    <img loading="lazy" src="ptfile.png"/> 
+</figure>
+
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/blog/tags/yolo%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/">YOLO，アノテーション</a></li>
+      <li><a href="http://localhost:1313/blog/tags/labelme/">Labelme</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/blog/">箱四のブログ</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

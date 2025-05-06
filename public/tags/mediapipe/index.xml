@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>MediaPipe on 箱四のブログ</title>
+    <link>http://localhost:1313/blog/tags/mediapipe/</link>
+    <description>Recent content in MediaPipe on 箱四のブログ</description>
+    <generator>Hugo -- 0.147.1</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sat, 10 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/mediapipe/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>麻雀放送対局用のオートスイッチャーを作りたい</title>
+      <link>http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/</guid>
+      <description>&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;自動採譜プロジェクト&lt;/a&gt;の息抜き的な記事です．&lt;/p&gt;
+&lt;p&gt;せっかく全自動雀卓があって，手元用カメラが4台あるんだから，麻雀の配信とか出来たら嬉しいよね～とか言う話の流れになりまして，
+ところが同卓者を募るので精一杯な状況で配信スタッフをおくわけにもいかない．だったらカメラの切り替えぐらいは自動化しちゃおう！！ってのがこの記事の主旨です．&lt;/p&gt;
+&lt;h2 id=&#34;カメラ切り替えトリガー&#34;&gt;カメラ切り替えトリガー&lt;/h2&gt;
+&lt;p&gt;カメラの切り替えトリガーを「&lt;strong&gt;牌山にプレーヤーが触れたタイミング&lt;/strong&gt;」と設定しました．&lt;/p&gt;
+&lt;p&gt;自動採譜プロジェクトの実装作業も視野に入れて，手牌変化を監視する手法も無くはないです．ただし，牌検出に計算コストがかかること，カメラ切り替えが牌検出精度に依存してしまうことを考慮し，今回はよりシンプルな方法を選択しました．&lt;/p&gt;
+&lt;h2 id=&#34;ツモ位置の検出&#34;&gt;ツモ位置の検出&lt;/h2&gt;
+&lt;p&gt;まず，天カメの映像から卓上のツモ位置を特定する必要があります．&lt;br&gt;牌山の形を見てみましょう．&lt;/p&gt;
+&lt;p&gt;対局開始前はこんな感じ．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;t_0.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;対局開始直後はこんな感じ．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;t_1.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;対局中はこんな感じ．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;t_2.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;対局開始前は4つ牌山がありますが，対局開始以降は牌山が&lt;del&gt;必ず3つ以下になります&lt;/del&gt;王牌の扱い上，4つのときもあります．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;牌山が3つのとき&lt;/p&gt;
+&lt;p&gt;牌山の並びを時計回りに見た際に，牌山が何もない場合は隣の牌山の端点がツモ位置になります．&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;牌山が4つのとき&lt;/p&gt;
+&lt;p&gt;一つの家に2つ矩形が検出された場合，それを王牌と判定し，ツモ位置を特定します．&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;fig1.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;実装の流れとしては，麻雀牌背面色部分を天カメ映像から取得し，そこから矩形を検出しています．手牌や河などから発生する検出ミスは矩形領域の面積や画素成分などで例外処理をしています．&lt;/p&gt;
+&lt;p&gt;牌山検出後，卓全体をXの字に4分割し，矩形の重心位置に基づき分類しています．&lt;/p&gt;
+&lt;h3 id=&#34;実装概要&#34;&gt;実装概要&lt;/h3&gt;
+&lt;p&gt;元画像です．読み込み時に卓の形状に合わせてトリミングしておきます．リアルタイムの牌山検出を行う際はノイズ軽減のため，鳴き牌表示部分と卓中央部分は予めマスク処理を行っておきます．
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;original_image.png&#34;/&gt; 
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cv2.inRange()&lt;/code&gt;を使用し，画像中の麻雀牌の背面色を絞り込みます．その際，クロージング処理を行いノイズの発生を抑制します．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;mask_hai.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;二値化した画像に対し，&lt;code&gt;cv2.findContours()&lt;/code&gt;を使用し，牌山となりうる矩形を検出します．&lt;/p&gt;
+&lt;p&gt;手牌や鳴き牌，不意に伏せた牌が矩形として検出されてしまうため，矩形の座標，矩形の最小サイズ，矩形内の画素成分などにより牌山を絞り込みます．
+その後，特定した牌山の中心位置に基づきツモ牌の位置を特定します．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;tsumohai.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;ツモプレイヤーの検出&#34;&gt;ツモプレイヤーの検出&lt;/h2&gt;
+&lt;p&gt;ツモ動作をしたプレイヤーをリアルタイムで監視するため，画像中から手指検出をおこない，人差し指の位置に基づきツモ動作を検出します．
+&lt;a href=&#34;https://developers.google.com/mediapipe/solutions/vision/hand_landmarker&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;MediaPipe&lt;/a&gt;
+のハンドトラッキングを使って，前節のツモ位置と人差し指が近づいたタイミングをツモとして判定します．
+今回は処理負荷軽減のため，手指検出をツモ牌の周辺に限定して推論を行っています．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;tsumo1.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;プレイヤーの識別には，手首の座標と中指付け根の座標から成る線分の角度を求め，角度を4分割して識別しました．&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;tsumo2.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;オートスイッチャー実装&#34;&gt;オートスイッチャー実装！！！&lt;/h2&gt;
+&lt;p&gt;OBSを使用して配信するため，カメラ切り替えには
+&lt;a href=&#34;https://github.com/Elektordi/obs-websocket-py/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;obs-websocket-py&lt;/a&gt;
+を使用しました．こちらの
+&lt;a href=&#34;https://github.com/Elektordi/obs-websocket-py/blob/master/samples/switch_scenes.py&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;サンプル&lt;/a&gt;
+がそのまま動作して助かりました．&lt;/p&gt;
+&lt;p&gt;GUI実装にはHTML/JSでの記述が可能な
+&lt;a href=&#34;https://github.com/python-eel/Eel&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Eel&lt;/a&gt;
+を使用しました．GUI設計ライブラリ毎の独自記法を覚える必要がないので，かなり重宝しています．&lt;/p&gt;
+&lt;p&gt;実際の動作の様子がこちら．&lt;/p&gt;
+&lt;video controls preload=&#34;auto&#34; width=&#34;100%&#34;  playsinline class=&#34;html-video&#34;&gt;
+    &lt;source src=&#34;http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/cam_switcher_test.mp4&#34; type=&#34;video/mp4&#34;&gt;
+  &lt;span&gt;Your browser doesn&#39;t support embedded videos, but don&#39;t worry, you can &lt;a href=&#34;http://localhost:1313/blog/posts/20240210_mahjongautocamswitcher/cam_switcher_test.mp4&#34;&gt;download it&lt;/a&gt; and watch it with your favorite video player!&lt;/span&gt;
+&lt;/video&gt;
+&lt;p&gt;現時点では鳴きには対応してないので，手動切替機能も実装しています．とはいえ鳴いた牌を監視すればたぶん容易に検出可能なので，追々実装したいですね．&lt;/p&gt;
+&lt;p&gt;あと，牌山をずらす行為についても実装上では判定の対象となっています．これは両手で牌山をずらした場合に例外としてカメラ切り替えを行わない設計にすればある程度は回避できる問題です．ただし，自身のツモ番に牌山をずらすのは問題ないので，とりあえず保留ですね．&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>RTSP on 箱四のブログ</title>
+    <link>http://localhost:1313/blog/tags/rtsp/</link>
+    <description>Recent content in RTSP on 箱四のブログ</description>
+    <generator>Hugo -- 0.147.1</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Fri, 01 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/rtsp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RTSP通信でカメラの映像を受信してみる</title>
+      <link>http://localhost:1313/blog/posts/20231201_getframertsp/</link>
+      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20231201_getframertsp/</guid>
+      <description>&lt;h2 id=&#34;rtspでフレーム取得opencv&#34;&gt;RTSPでフレーム取得（OpenCV）&lt;/h2&gt;
+&lt;p&gt;RTSP通信でカメラの映像を受け取る際，OpenCVを使って記述できる．&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; cv2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;rtsp://username:password@ipaddress&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Tapo C200は末尾に画質を指定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;rtsp://username:password@ipaddress/stream1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cap &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cv2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VideoCapture(url)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ret, frame &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cap&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ただこれだとTapo C200では&lt;strong&gt;1秒程度遅延&lt;/strong&gt;が発生してしまう．
+&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34;&gt;麻雀自動採譜&lt;/a&gt;
+の実装上，天井カメラを含めたカメラ間での同期が必須なんですよね．&lt;/p&gt;
+&lt;h2 id=&#34;rtspでフレーム取得pyav&#34;&gt;RTSPでフレーム取得（PyAV）&lt;/h2&gt;
+&lt;p&gt;RTSP映像の受信にはFFmpegのPythonバインディングである
+&lt;a href=&#34;https://pyav.org/docs/develop/index.html&#34; target=&#34;_blank&#34;&gt;PyAV&lt;/a&gt;
+を利用した方法もあり、以下で映像受信が可能でした．&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-python:&#34; data-lang=&#34;python:&#34;&gt;import av
+
+url = &amp;#34;rtsp://username:password@ipaddress&amp;#34;
+container = av.open(url)
+for frame in container.decode(video=0):
+    frame = frame.to_ndarray(format=&amp;#39;bgr24&amp;#39;)
+    pass
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;PyAVを利用した場合は遅延が大幅に減少した．やったね．&lt;/p&gt;
+&lt;h2 id=&#34;rtspで一定時間毎にフレーム取得pyav&#34;&gt;RTSPで一定時間毎にフレーム取得（PyAV）&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/blog/tags/麻雀自動採譜/&#34; target=&#34;_blank&#34;&gt;麻雀自動採譜&lt;/a&gt;
+牌認識に向けて，学習画像収集のためn秒おきに画像を撮影してみた．いつものOpenCVと同じ感覚で&lt;code&gt;time.sleep(n)&lt;/code&gt;を使用したところ以下のエラーが複数出現．&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-raw:&#34; data-lang=&#34;raw:&#34;&gt;max delay reached. need to consume packet
+RTP: missed 6066 packets
+RTP: PT=60: bad cseq a657 expected=8ea5
+max delay reached. need to consume packet
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;sleepで無理に処理を中断させたため接続が不安定になったのかも．
+通常の受信が安定していたことを踏まえ，とりあえず以下のコードで対応してみる．&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
