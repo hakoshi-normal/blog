@@ -105,7 +105,9 @@ Anaconda Promptに&lt;code&gt;conda list&lt;/code&gt;と打ち込んでEnterキ�
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;results &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; model(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://ultralytics.com/images/bus.jpg&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;results[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show()
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;バスを背景にした画像の物体検出が表示されたはずです！&lt;/p&gt;
-&lt;p&gt;作業ディレクトリを開くと，&lt;code&gt;yolo11n.pt&lt;/code&gt;というファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．&lt;/p&gt;</description>
+&lt;p&gt;作業ディレクトリを開くと，&lt;code&gt;yolo11n.pt&lt;/code&gt;というファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．&lt;/p&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.ultralytics.com/ja/quickstart/#understanding-settings&#34;&gt;https://docs.ultralytics.com/ja/quickstart/#understanding-settings&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>【入門3】YOLOアノテーションと学習</title>

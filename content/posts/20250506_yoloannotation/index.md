@@ -209,3 +209,9 @@ CPUのみの実行環境ではかなり時間がかかるので気長に待ち�
 これは今回学習したモデルファイルで，実際に物体検出をシステム開発に組み込むときに使用します．
 
 {{< figure src="ptfile.png" class="center">}}
+
+## 参考
+
+[https://github.com/wkentaro/labelme](https://github.com/wkentaro/labelme)
+[https://github.com/rooneysh/Labelme2YOLO](https://github.com/rooneysh/Labelme2YOLO)
+[https://docs.ultralytics.com/ja/datasets/detect/](https://docs.ultralytics.com/ja/datasets/detect/)

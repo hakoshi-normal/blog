@@ -41,3 +41,6 @@ results[0].show()
 バスを背景にした画像の物体検出が表示されたはずです！
 
 作業ディレクトリを開くと，```yolo11n.pt```というファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．
+
+## 参考
+[https://docs.ultralytics.com/ja/quickstart/#understanding-settings](https://docs.ultralytics.com/ja/quickstart/#understanding-settings)
