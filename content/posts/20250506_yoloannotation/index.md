@@ -3,7 +3,9 @@ title: 【入門3】YOLOアノテーションと学習
 # publishdate: 2023-12-01
 date: 2025-05-06
 tags: [YOLO, アノテーション, labelme, YOLO入門]
-toc: true
+UseHugoToc: true
+ShowToc: true
+tocopen: true
 ---
 
 ## アノテーションとは？

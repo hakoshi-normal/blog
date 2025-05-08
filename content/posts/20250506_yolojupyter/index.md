@@ -3,7 +3,9 @@ title: 【入門2】YOLO，Jupyterのセットアップ
 # publishdate: 2023-12-01
 date: 2025-05-06
 tags: [YOLO, JupyterLab, Python, YOLO入門]
-toc: true
+UseHugoToc: true
+ShowToc: true
+tocopen: true
 ---
 
 ## JupyterLab+Visual Studio Codeを使ったPython実行
