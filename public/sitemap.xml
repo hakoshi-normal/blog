@@ -14,6 +14,9 @@
     <loc>http://localhost:1313/blog/tags/conda/</loc>
     <lastmod>2025-05-06T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/blog/tags/jupyterlab/</loc>
+    <lastmod>2025-05-06T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/blog/tags/labelme/</loc>
     <lastmod>2025-05-06T00:00:00+00:00</lastmod>
   </url><url>
@@ -26,10 +29,13 @@
     <loc>http://localhost:1313/blog/tags/</loc>
     <lastmod>2025-05-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/tags/yolojupyterlabpython/</loc>
+    <loc>http://localhost:1313/blog/tags/yolo/</loc>
     <lastmod>2025-05-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/tags/yolo%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/</loc>
+    <loc>http://localhost:1313/blog/tags/yolo%E5%85%A5%E9%96%80/</loc>
+    <lastmod>2025-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/blog/tags/%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/</loc>
     <lastmod>2025-05-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/blog/tags/%E4%BB%AE%E6%83%B3%E7%92%B0%E5%A2%83/</loc>

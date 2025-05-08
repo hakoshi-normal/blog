@@ -9,7 +9,7 @@
     <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>【入門】Python仮想環境</title>
+      <title>【入門1】Python仮想環境</title>
       <link>http://localhost:1313/blog/posts/20250506_condavenv/</link>
       <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/posts/20250506_condavenv/</guid>
@@ -71,6 +71,41 @@ Anaconda Promptに&lt;code&gt;conda list&lt;/code&gt;と打ち込んでEnterキ�
 &lt;p&gt;よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります．
 実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．&lt;/p&gt;
 &lt;p&gt;この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>【入門2】YOLO，Jupyterのセットアップ</title>
+      <link>http://localhost:1313/blog/posts/20250506_yolojupyter/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/posts/20250506_yolojupyter/</guid>
+      <description>&lt;h2 id=&#34;jupyterlabvisual-studio-codeを使ったpython実行&#34;&gt;JupyterLab+Visual Studio Codeを使ったPython実行&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Visual Studio CodeにJupyter拡張機能をインストール&lt;/li&gt;
+&lt;li&gt;空のファイルを作成し，拡張子を&lt;code&gt;.ipynb&lt;/code&gt;とする&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;＋コード&lt;/code&gt;ボタンからコードブロックを作成し，Pythonプログラムを記述&lt;/li&gt;
+&lt;li&gt;右上&lt;code&gt;カーネルの選択&lt;/code&gt;から実行したいPython環境を選択し&lt;/li&gt;
+&lt;li&gt;コードブロック左側の実行ボタン&lt;code&gt;▷&lt;/code&gt;を押下&lt;/li&gt;
+&lt;li&gt;ポップアップが出てきたら&lt;code&gt;インストール&lt;/code&gt;をクリックして&lt;code&gt;ipykernel&lt;/code&gt;をインストール
+（&lt;code&gt;pip install ipykernel&lt;/code&gt;を当該環境で実行してインストールも出来ます）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;center&#34;&gt;
+    &lt;img loading=&#34;lazy&#34; src=&#34;vsjupyter.png&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;yoloのセットアップ&#34;&gt;YOLOのセットアップ&lt;/h2&gt;
+&lt;p&gt;今回は最新のYOLOを簡単に扱うことができるUltralyticsパッケージを利用します．&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;conda create --name yolo-env python=3.11&lt;/code&gt;を実行して仮想環境を作成&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conda activate yolo-env&lt;/code&gt;で仮想環境を有効化&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pip install ultralytics&lt;/code&gt;でUltralyticsパッケージをインストール&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ここまで済んだら，テストコードを動かしてみましょう！&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; ultralytics &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; YOLO
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;model &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; YOLO(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yolo11n.pt&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;results &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; model(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://ultralytics.com/images/bus.jpg&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;results[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;バスを背景にした画像の物体検出が表示されたはずです！&lt;/p&gt;
+&lt;p&gt;作業ディレクトリを開くと，&lt;code&gt;yolo11n.pt&lt;/code&gt;というファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．&lt;/p&gt;</description>
     </item>
     <item>
       <title>麻雀放送対局用のオートスイッチャーを作りたい</title>

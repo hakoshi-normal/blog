@@ -13,6 +13,8 @@ outputs:
     - HTML
     - RSS
     - JSON
+  blogdown::html_page:
+      toc: TRUE
 
 menu:
   main:

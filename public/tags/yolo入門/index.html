@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>アノテーション | 箱四のブログ</title>
+<title>YOLO入門 | 箱四のブログ</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/blog/tags/%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/">
+<link rel="canonical" href="http://localhost:1313/blog/tags/yolo%E5%85%A5%E9%96%80/">
 <link crossorigin="anonymous" href="/blog/assets/css/stylesheet.6da9a63d25a9608bca2f7f907a030e887a7dd3c3f3918e4cc113129361414bda.css" integrity="sha256-bammPSWpYIvKL3&#43;QegMOiHp908PzkY5MwRMSk2FBS9o=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blog/tags/%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/index.xml">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/tags/%E3%82%A2%E3%83%8E%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blog/tags/yolo%E5%85%A5%E9%96%80/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/tags/yolo%E5%85%A5%E9%96%80/">
 <noscript>
     <style>
         #theme-toggle,
@@ -122,9 +122,49 @@
 <main class="main"> 
 <header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/blog/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/blog/tags/">Tags</a></div>
   <h1>
-    アノテーション
+    YOLO入門
   </h1>
 </header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">【入門1】Python仮想環境
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>ライブラリとは？ ライブラリとは，再利用可能なソフトウェア部品のことで，特定の機能をまとめたコードの再集合のことを指します．簡単に言えば，他の人が作ってくれた機能を自身のプログラムで使える便利なコード集のことです． Pythonには標準ライブラリと外部ライブラリの2種類があります．
+標準ライブラリ 標準ライブラリはPythonをインストールしたときに標準的に入っているライブラリのことです．通常のプログラム作成時に頻繁に必要となる機能をまとめたものが多くあります．例えば，
+乱数を作成する random 時刻を取得できる datetime, time ファイルシステムへのアクセスを実現する os, shutil 基礎的な数学関数 math HTMLサポート html URLを使ってインターネットにアクセスできる urllib スマートフォンで言うところのカメラ，アルバム，時計などのデフォルトアプリみたいなものです．これらはPythonが動く環境であれば勝手に入っているため，import ライブラリ名と記述すればすぐに利用することができます．助かる！！
+# サイコロの出目を出力 import random dice_roll = random.randint(1, 6) print(&#34;サイコロの出目:&#34;, dice_roll) 外部ライブラリ 外部ライブラリはPythonにはもともと組み込まれておらず，自身で導入するタイプのライブラリのことです．実装したいプログラムの機能に応じて適切に選択する必要があります．例えば，
+効率的な多次元配列の数値計算を実現する Numpy 画像処理の機能を提供する OpenCV グラフを簡単に描画できる Matplotlib 様々なアルゴリズムでの機械学習を可能とする scikit-learn Webアプリの開発に役立つ Django スマートフォンで言うところのゲームやチャットアプリなどのストアアプリみたいなものです．これらは自身でインストール作業をする必要がありますが，それさえ済ませば高機能な実装をいとも容易く実現できます！とても便利！！ 有志のプログラマが開発して公開してくれているため，感謝の気持ちを忘れずに使いましょう（Pythonもそうだけど）．
+# サイコロの出目を出力 import numpy as np dice_roll = np.random.randint(1, 7) print(&#34;サイコロの出目:&#34;, dice_roll) ライブラリを確認してみよう では，ここからは実際に手を動かしながら解説を進めます． まずはスタートメニューから Anaconda Prompt を開いてください．
+これはコマンドプロンプトと呼ばれる画面で，ここにコマンドと呼ばれる命令文を入力することでコンピュータを操作できます． 試しに，ここにtreeと打ち込んでEnterキーを押してみてください．
+……何かツリー構造の記述がたくさん出てきたかと思います．これはディレクトリ構造をツリー形式で表示するコマンドです（あんまり使わないけど）！ なかなか表示が終わらない場合はCtrl&#43;Cキーでキャンセルしてください．
+ではコマンドを使って，今使っているPythonで利用可能な外部ライブラリの一覧を見てみましょう！ Anaconda Promptにconda listと打ち込んでEnterキーを押してみてください．
+インストール済みライブラリとバージョンの一覧が表示されました．既にたくさん入っているようです！
+よくよく見てみると，数値計算ができるNumpyや表データを扱えるPandasなど，データサイエンスに役立つライブラリがたくさんあります． 実はAnacondaは科学計算のためのPython配布形式（ディストリビューション）の一つであり，既に役立つライブラリが揃えられているんです．
+この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 【入門1】Python仮想環境" href="http://localhost:1313/blog/posts/20250506_condavenv/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">【入門2】YOLO，Jupyterのセットアップ
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>JupyterLab&#43;Visual Studio Codeを使ったPython実行 Visual Studio CodeにJupyter拡張機能をインストール 空のファイルを作成し，拡張子を.ipynbとする ＋コードボタンからコードブロックを作成し，Pythonプログラムを記述 右上カーネルの選択から実行したいPython環境を選択し コードブロック左側の実行ボタン▷を押下 ポップアップが出てきたらインストールをクリックしてipykernelをインストール （pip install ipykernelを当該環境で実行してインストールも出来ます） YOLOのセットアップ 今回は最新のYOLOを簡単に扱うことができるUltralyticsパッケージを利用します．
+conda create --name yolo-env python=3.11を実行して仮想環境を作成 conda activate yolo-envで仮想環境を有効化 pip install ultralyticsでUltralyticsパッケージをインストール ここまで済んだら，テストコードを動かしてみましょう！
+from ultralytics import YOLO model = YOLO(&#34;yolo11n.pt&#34;) results = model(&#34;https://ultralytics.com/images/bus.jpg&#34;) results[0].show() バスを背景にした画像の物体検出が表示されたはずです！
+作業ディレクトリを開くと，yolo11n.ptというファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 【入門2】YOLO，Jupyterのセットアップ" href="http://localhost:1313/blog/posts/20250506_yolojupyter/"></a>
+</article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">

@@ -9,7 +9,7 @@
     <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/tags/%E4%BB%AE%E6%83%B3%E7%92%B0%E5%A2%83/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>【入門】Python仮想環境</title>
+      <title>【入門1】Python仮想環境</title>
       <link>http://localhost:1313/blog/posts/20250506_condavenv/</link>
       <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/posts/20250506_condavenv/</guid>

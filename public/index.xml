@@ -9,7 +9,7 @@
     <lastBuildDate>Tue, 06 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>【入門】Python仮想環境</title>
+      <title>【入門1】Python仮想環境</title>
       <link>http://localhost:1313/blog/posts/20250506_condavenv/</link>
       <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/posts/20250506_condavenv/</guid>
@@ -73,7 +73,7 @@ Anaconda Promptに&lt;code&gt;conda list&lt;/code&gt;と打ち込んでEnterキ�
 &lt;p&gt;この状態，一見プログラムを書くのに便利な環境であるように見えるんですが実はそうでないケースがあります．&lt;/p&gt;</description>
     </item>
     <item>
-      <title>【入門】YOLO，Jupyterのセットアップ</title>
+      <title>【入門2】YOLO，Jupyterのセットアップ</title>
       <link>http://localhost:1313/blog/posts/20250506_yolojupyter/</link>
       <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/posts/20250506_yolojupyter/</guid>
@@ -108,7 +108,7 @@ Anaconda Promptに&lt;code&gt;conda list&lt;/code&gt;と打ち込んでEnterキ�
 &lt;p&gt;作業ディレクトリを開くと，&lt;code&gt;yolo11n.pt&lt;/code&gt;というファイルがダウンロードされています．これが，YOLOのモデルファイルです．これはYOLOのデフォルトの訓練済みモデルで，COCO Datasetに収録された80種類の物体を識別することが出来ます．&lt;/p&gt;</description>
     </item>
     <item>
-      <title>【入門】YOLOアノテーションと学習</title>
+      <title>【入門3】YOLOアノテーションと学習</title>
       <link>http://localhost:1313/blog/posts/20250506_yoloannotation/</link>
       <pubDate>Tue, 06 May 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/posts/20250506_yoloannotation/</guid>

@@ -128,7 +128,7 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">【入門】YOLO，Jupyterのセットアップ
+    <h2 class="entry-hint-parent">【入門2】YOLO，Jupyterのセットアップ
     </h2>
   </header>
   <div class="entry-content">
@@ -139,7 +139,42 @@ from ultralytics import YOLO model = YOLO(&#34;yolo11n.pt&#34;) results = model(
 </p>
   </div>
   <footer class="entry-footer"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 【入門】YOLO，Jupyterのセットアップ" href="http://localhost:1313/blog/posts/20250506_yolojupyter/"></a>
+  <a class="entry-link" aria-label="post link to 【入門2】YOLO，Jupyterのセットアップ" href="http://localhost:1313/blog/posts/20250506_yolojupyter/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">【入門3】YOLOアノテーションと学習
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>アノテーションとは？ 機械学習の分類のひとつである教師あり学習では，まず入力データと出力データの組を複数用意し，それらを使って機械学習モデルを訓練します．
+入力データと出力データの組は，タスクによって様々です．例えば，
+入力：画像データ，出力：それぞれが犬or猫 入力：家の情報（間取り，立地，築年数など），出力：家の価格 入力：これまでの気温，出力：明日の気温 入力：画像データ，出力：各物体の座標 どんなタスクを前提とする場合でも，これら入力データと出力データの組を作る作業が必要となります．これがアノテーションです．
+環境構築 今回はYOLOによる画像物体認識を目標とします．そこで，アノテーションで作るべきデータは以下になります．
+入力：画像データ，出力：各物体の座標 頑張れば用意した画像の座標を数えてアノテーションできそうですが，今回はより簡単に作業を進めるためにLabelmeというツールを使います．GUIが整備されたソフトウェアですが，Pythonライブラリとして無償で提供されています！（ありがたい！！）
+Anaconda Promptを開く conda create -n annot_env python=3.12で仮想環境を作成 conda activate annot_envで仮想環境を有効化 pip install --upgrade labelmeと入力しLabelmeをインストール これでインストールは完了です．そのままannot_env環境内でlabelmeコマンドを実行してみてください！
+この画面が表示されたら成功です！
+いざ，アノテーション 画像読み込み 今回は画像から麻雀牌を物体認識するタスクに挑戦してみます！サンプル画像は以下からダウンロード，解凍してください．
+サンプル画像 Zipファイルの解凍が済んだらLabelmeの画面左側にあるOpen Dirから，画像のディレクトリを開いてください．
+これでアノテーションの準備は完了です！
+範囲選択，ラベル付け アノテーションの流れは以下になります．
+画像を右クリック，Create Rectangleをクリック 物体の範囲を四角形で囲んで選択，間違えたらEscキーで戻る 出てきたポップアップの上部Enter object labelにラベルを入力してOKをクリック 2と3を物体の数だけひたすら繰り返す 画像内のアノテーションが終わったら画面左部Saveから画像と同名のJSONファイルを保存 ちょっとやってみますね～
+はい，できました．ラベルは牌の種類（萬子筒子索子字牌）の略称です．
+……
+…………
+………………
+めんどくさい
+機械学習では一般的にデータの数が大きいほど性能が上がりやすいとされています．つまり，（要件の要求レベルにもよりますが）精度を上げるためにはたくさんアノテーションする必要があるんです．
+そこで，特定のタスクの機械学習を考える場合はアノテーションに取り掛かる前に，データセットが利用可能なライセンスで公開されていないかどうか調べるところからスタートします．例えばYOLOの場合，Roboflow，VisualData，Google Open Images Datasetなどが画像データセットを公開している他，タスクに応じて論文と併せて公開されているデータセットも多数あります．
+また今回はアノテーション入門ということで手作業での方法を紹介していますが，画像認識AIによる半自動ツールもあるので興味があれば調べてみてください．
+今回は，なんと，特別に，アノテーション済みファイルを用意してあります！
+アノテーション結果（JSON） ZIPファイルをダウンロード＆解凍したら，datasetsという名前のディレクトリを作成し，先程の画像ファイルとJSONファイルを以下の構造で配置してください．（image_1.jsonは自作のファイルで構いません！）
+.└── datasets/├── image_1.jpg├── image_1.json├── image_2.jpg├── image_2.json├── 〜省略〜├── image_10.jpg└── image_10.json データセットフォーマットの変換 では，学習させるデータの中身を一度見てみましょう！image_1.jsonを開いてみます．
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-05-06 00:00:00 +0000 UTC'>May 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 【入門3】YOLOアノテーションと学習" href="http://localhost:1313/blog/posts/20250506_yoloannotation/"></a>
 </article>
     </main>
     
