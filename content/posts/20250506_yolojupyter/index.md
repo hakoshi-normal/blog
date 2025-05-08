@@ -1,8 +1,8 @@
 ---
-title: 【入門】YOLO，Jupyterのセットアップ
+title: 【入門2】YOLO，Jupyterのセットアップ
 # publishdate: 2023-12-01
 date: 2025-05-06
-tags: [YOLO, JupyterLab, Python]
+tags: [YOLO, JupyterLab, Python, YOLO入門]
 toc: true
 ---
 
