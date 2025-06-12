@@ -74,6 +74,29 @@ Denoにはサーバ起動時に便利なコマンドフラグが用意されて�
 ```deno run --watch --allow-net --allow-read --allow-env server.ts```
 
 
+
+## 公開してみる！！
+
+### GitHub，リポジトリの準備
+
+1. [GitHub](https://github.co.jp/)のアカウントを作成，ログインする
+2. 新しいリポジトリを作る
+　1. [ここ](https://github.com/new)にアクセス
+  2. ```Repository name```にリポジトリ名をつける（今回はMySiteとか）
+  3. ```Create repository```でリポジトリを作成
+
+### GitHub Desktopで公開してみる
+
+
+
+
+
+
+
+
+
+
+
 {{< figure src="vsjupyter.png" class="center">}}
 
 ## YOLOのセットアップ
